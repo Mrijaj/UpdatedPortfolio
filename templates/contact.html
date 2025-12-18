@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% from "macros.html" import hero %}
+
+{% block content %}
+
+    {{ hero("Get In Touch", "Have a project in mind? Let's chat.", True) }}
+
+    <div class="contact-section">
+
+        <form action="https://formspree.io/f/mdkqqpjg" method="POST" class="contact-form">
+
+            <input type="hidden" name="_next" value="{{ url_for('thank_you', _external=True) }}">
+
+            <input type="text" name="_gotcha" style="display:none">
+
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Your Name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="Your Email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="5" class="form-control" placeholder="Write your message here..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> Send Message
+            </button>
+        </form>
+    </div>
+
+    <section class="services" style="padding-top: 0;">
+        <h2 style="font-size: 1.5rem; margin-bottom: 20px;">Or connect via</h2>
+        <div class="cards-container">
+
+            <a href="https://www.linkedin.com/in/ijaj-hussain-b417b916b/" target="_blank" class="card" style="text-decoration: none; width: 250px; cursor: pointer;">
+                <div class="icon-box"><i class="fab fa-linkedin"></i></div>
+                <h3 style="margin: 0;">LinkedIn</h3>
+                <p style="margin-top: 5px;">Connect professionally</p>
+            </a>
+
+            <a href="mailto:ijajhussain6202@gmail.com" class="card" style="text-decoration: none; width: 250px; cursor: pointer;">
+                <div class="icon-box"><i class="fas fa-envelope"></i></div>
+                <h3 style="margin: 0;">Email</h3>
+                <p style="margin-top: 5px;">ijajhussain6202@gmail.com</p>
+            </a>
+
+        </div>
+    </section>
+
+{% endblock %}

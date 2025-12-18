@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Ijaj Hussain</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="{{ url_for('home') }}" class="logo" style="text-decoration: none;">
+            Ijaj.py
+        </a>
+
+        <ul class="nav-links">
+            <li>
+                <a href="{{ url_for('home') }}" class="{{ 'active' if request.endpoint == 'home' }}">Home</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('about') }}" class="{{ 'active' if request.endpoint == 'about' }}">About</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('resume') }}" class="{{ 'active' if request.endpoint == 'resume' }}">Resume</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('blog') }}" class="{{ 'active' if request.endpoint == 'blog' }}">Blog</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('contact') }}" class="btn-nav {{ 'active-btn' if request.endpoint == 'contact' }}">Contact</a>
+            </li>
+
+            <li>
+                <i id="theme-icon" class="fas fa-moon" title="Toggle Dark Mode"></i>
+            </li>
+        </ul>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/ijaj-hussain-b417b916b/" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="https://github.com/Mrijaj" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+
+            <p>
+                &copy; 2025 Ijaj Hussain. All rights reserved.
+                <span style="margin: 0 10px; color: #ccc;">|</span>
+                <a href="{{ url_for('view_subscribers') }}" style="color: gray; text-decoration: none; font-size: 0.85rem; opacity: 0.7;">
+                    <i class="fas fa-lock"></i> Admin
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <div id="terminal-toast" class="terminal-toast">
+        <span class="prompt">>></span> Executing Ijaj.py... <span class="cursor">_</span>
+    </div>
+
+    <div id="chat-widget">
+        <button id="chat-toggle-btn">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+
+        <div id="chat-box" class="chat-box hidden">
+            <div class="chat-header">
+                <span>Elia</span>
+                <div class="chat-controls">
+                    <button id="chat-clear-btn" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button id="chat-minimize-btn" title="Minimize">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button id="chat-close-btn" title="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="chat-messages" class="chat-messages"></div>
+
+            <div class="chat-input-area">
+                <input type="text" id="user-input" placeholder="Type a message..." autocomplete="off">
+                <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <section class="hero" style="padding: 20px 20px; min-height: auto; text-align: center;">
+        <h1 style="margin: 0; font-size: 2rem;">My Resume</h1>
+        <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 1rem;">
+            System Analyst @ HPE | Python Developer | DevOps Enthusiast
+        </p>
+    </section>
+
+    <div class="resume-container">
+
+        <aside class="resume-sidebar">
+
+            <div class="card" style="width: 100%; margin-bottom: 30px; text-align: center; padding: 20px;">
+                <div style="
+                    width: 140px;
+                    height: 140px;
+                    margin: 0 auto 15px auto;
+                    border-radius: 50%;
+                    border: 4px solid var(--primary-color);
+                    overflow: hidden;">
+
+                    <img src="{{ url_for('static', filename='images/Ijaj_hussain_.jpg') }}"
+                         alt="Ijaj Hussain"
+                         style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <h3 style="font-size: 1.4rem; margin-bottom: 5px;">Ijaj Hussain</h3>
+                <p style="color: gray; font-size: 0.9rem;">Pune, India</p>
+
+                <div style="margin-top: 10px; font-size: 1.2rem;">
+                    <a href="https://www.linkedin.com/in/ijaj-hussain-b417b916b/" target="_blank" style="margin: 0 5px; color: #0077b5;"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/Mrijaj" target="_blank" style="margin: 0 5px; color: var(--text-color);"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            <div class="card" style="width: 100%; margin-bottom: 30px;">
+                <h3 class="resume-heading"><i class="fas fa-tools"></i> Technical Skills</h3>
+
+                <p><strong>Languages:</strong><br> Python, SQL</p>
+                <hr style="margin: 10px 0; border: 0; border-top: 1px solid var(--border-color);">
+
+                <p><strong>Web Dev:</strong><br> Flask, HTML, CSS, REST APIs</p>
+                <hr style="margin: 10px 0; border: 0; border-top: 1px solid var(--border-color);">
+
+                <p><strong>Data Analysis:</strong><br> NumPy, Pandas, Matplotlib</p>
+                <hr style="margin: 10px 0; border: 0; border-top: 1px solid var(--border-color);">
+
+                <p><strong>Tools & DevOps:</strong><br> Git/GitHub, Linux (CLI), VS Code, Docker (Basics)</p>
+                <hr style="margin: 10px 0; border: 0; border-top: 1px solid var(--border-color);">
+
+                <p><strong>Soft Skills:</strong><br> Problem-solving, Analytical thinking, Teamwork</p>
+            </div>
+
+            <div class="card" style="width: 100%; margin-bottom: 30px;">
+                <h3 class="resume-heading"><i class="fas fa-graduation-cap"></i> Education</h3>
+
+                <div style="margin-bottom: 15px;">
+                    <h4 style="color: var(--text-color);">B.Tech in Computer Eng.</h4>
+                    <p style="font-size: 0.9rem; font-weight: bold; margin-top: 5px;">
+                        <a href="https://ghrcemp.raisoni.net/computer-engineering" target="_blank" rel="noopener noreferrer"
+                           style="color: var(--primary-color); text-decoration: none;">
+                            G.H Raisoni College of Engineering <i class="fas fa-external-link-alt" style="font-size: 0.8rem;"></i>
+                        </a>
+                    </p>
+                    <small style="color: gray;">2019 - 2023</small>
+                </div>
+
+                <div>
+                    <h4 style="color: var(--text-color);">H.S.C (Science)</h4>
+                    <p style="font-size: 0.9rem; font-weight: bold; margin-top: 5px;">
+                        <a href="https://dayanandpublicschool.edu.in/" target="_blank" rel="noopener noreferrer"
+                           style="color: var(--primary-color); text-decoration: none;">
+                            Dayanand Public School <i class="fas fa-external-link-alt" style="font-size: 0.8rem;"></i>
+                        </a>
+                    </p>
+                    <small style="color: gray;">2017 - 2019</small>
+                </div>
+            </div>
+
+            <div class="card" style="width: 100%;">
+                <h3 class="resume-heading"><i class="fas fa-certificate"></i> Certificates</h3>
+                <ul style="padding-left: 20px; line-height: 1.6;">
+                    <li>Python Developer (Udemy)</li>
+                    <li>Python Automation Project (Great Learning)</li>
+                </ul>
+            </div>
+
+        </aside>
+
+        <main class="resume-main">
+
+            <div class="card" style="width: 100%; margin-bottom: 30px;">
+                <h3 class="resume-heading"><i class="fas fa-user"></i> Profile Summary</h3>
+                <p>Enthusiastic Python developer with hands-on experience in automation, Flask web development, and data analysis. Skilled in Linux operations and building efficient, user-friendly solutions. Adept at problem-solving and collaborating in cross-functional teams.</p>
+            </div>
+
+            <div class="card" style="width: 100%; margin-bottom: 30px;">
+                <h3 class="resume-heading"><i class="fas fa-briefcase"></i> Work Experience</h3>
+
+                <div style="margin-bottom: 25px;">
+                    <h4 style="font-size: 1.2rem;">System Analyst</h4>
+                    <span style="font-weight: bold;">
+                        <a href="https://www.hpe.com/in/en/home.html" target="_blank" rel="noopener noreferrer"
+                           style="color: var(--primary-color); text-decoration: none;">
+                            Hewlett Packard Enterprise (HPE) <i class="fas fa-external-link-alt" style="font-size: 0.8rem;"></i>
+                        </a>
+                    </span>
+                    <br><small style="color: gray;">Dec 2023 – Present</small>
+                    <ul style="padding-left: 20px; margin-top: 10px; line-height: 1.6;">
+                        <li>Provided technical support for HPE products, enhancing customer satisfaction.</li>
+                        <li>Utilized <strong>DevOps (CI/CD)</strong> principles to improve automation.</li>
+                        <li>Leveraged <strong>Linux skills</strong> for troubleshooting and system optimization.</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 style="font-size: 1.2rem;">Web Development Intern</h4>
+                    <span style="font-weight: bold;">
+                        <a href="https://www.skillvertex.com/" target="_blank" rel="noopener noreferrer"
+                           style="color: var(--primary-color); text-decoration: none;">
+                            Skill Vertex Pvt Ltd <i class="fas fa-external-link-alt" style="font-size: 0.8rem;"></i>
+                        </a>
+                    </span>
+                    <ul style="padding-left: 20px; margin-top: 10px; line-height: 1.6;">
+                        <li>Gained hands-on experience in software development lifecycles and web technologies.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" style="width: 100%; margin-bottom: 30px;">
+                <h3 class="resume-heading"><i class="fas fa-code"></i> Key Projects</h3>
+
+                <h4 style="font-size: 1.2rem;">
+                    <a href="https://github.com/Mrijaj/Blog-Website" target="_blank" rel="noopener noreferrer"
+                       style="color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                        Flask Web Application (Automation & CRUD)
+                        <i class="fab fa-github"></i>
+                    </a>
+                </h4>
+
+                <small style="color: gray;">2024 - 2025</small>
+                <p style="margin-top: 10px;">Developed a dynamic web app to demonstrate CRUD operations and workflow automation.</p>
+                <ul style="padding-left: 20px; margin-top: 10px; line-height: 1.6;">
+                    <li><strong>Backend:</strong> Built with Flask, SQLite, and Jinja2 templates.</li>
+                    <li><strong>Features:</strong> Implemented form validation, REST API endpoints, and error logging.</li>
+                    <li><strong>Outcome:</strong> Automated routine tasks using Python scripts.</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 10px;">
+                <a href="{{ url_for('static', filename='resume.pdf') }}" download="Ijaj_Hussain_Resume.pdf" class="btn-submit" style="text-align: center; display: block; text-decoration: none; padding: 15px;">
+                    <i class="fas fa-file-download"></i> Download Full Resume (PDF)
+                </a>
+            </div>
+
+        </main>
+    </div>
+
+{% endblock %}

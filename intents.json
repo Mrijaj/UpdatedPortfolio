@@ -1,0 +1,74 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": ["Hi", "Hello", "Hey", "Good morning", "Is anyone there?", "Hola", "Greetings"],
+      "responses": ["Hello! I am Elia, Ijaj's AI assistant.", "Hi there! I am Elia. How can I help?", "Greetings! I am Elia."]
+    },
+    {
+      "tag": "identity",
+      "patterns": ["Who are you", "What is your name", "your name", "name", "Are you a bot", "Are you human", "Elia"],
+      "responses": ["I am Elia, a virtual assistant trained to answer questions about this portfolio.", "My name is Elia."]
+    },
+    {
+      "tag": "owner_name",
+      "patterns": ["Who is the owner", "owner name", "whose website is this", "who created this", "who built this", "boss", "creator", "who made you"],
+      "responses": ["The owner of this website is Ijaj Hussain.", "This portfolio belongs to Ijaj Hussain.", "I was created by Ijaj Hussain."]
+    },
+    {
+      "tag": "skills",
+      "patterns": ["skills", "skill", "What can you do?", "What are his skills?", "Does he know Python?", "Tech stack", "technologies", "coding", "python", "flask", "devops", "data engineering", "dba", "sql", "analysis"],
+      "responses": ["Ijaj specializes in Backend Development, Data Engineering, and Database Administration (DBA).", "He is skilled in Python, Flask, SQL, ETL Pipelines, and Data Analysis."]
+    },
+    {
+      "tag": "hobbies",
+      "patterns": ["hobbies", "what does he do for fun", "interests", "free time", "cricket", "astronomy", "vibe coding", "pastime", "sports"],
+      "responses": ["Ijaj loves playing cricket, is an amateur astronomer, and enjoys 'vibe coding' in his free time!"]
+    },
+    {
+      "tag": "contact",
+      "patterns": ["contact", "reach him", "email", "gmail", "address", "call", "phone", "how to contact", "send message", "talk to him"],
+      "responses": ["You can email him at ijajhussain6202@gmail.com", "Use the Contact form on this page to send a message directly!"]
+    },
+    {
+      "tag": "current_company",
+      "patterns": ["current company", "Where does he work now", "current job", "employer", "HPE", "office"],
+      "responses": ["He is currently working as a System Analyst at Hewlett Packard Enterprise (HPE)."]
+    },
+    {
+      "tag": "experience_years",
+      "patterns": ["years of experience", "how experienced is he", "total experience", "how long has he worked", "work history"],
+      "responses": ["Ijaj has 2 years of professional experience in technical support, automation, and system analysis."]
+    },
+    {
+      "tag": "college",
+      "patterns": ["college", "university", "btech", "degree", "graduation", "undergrad", "engineering college"],
+      "responses": ["He completed his B.Tech in Computer Engineering from G.H Raisoni College of Engineering (2023)."]
+    },
+    {
+      "tag": "high_school",
+      "patterns": ["school", "high school", "12th", "HSC", "junior college", "schooling"],
+      "responses": ["He completed his H.S.C (Science) from Dayanand Public School (2019)."]
+    },
+    {
+      "tag": "location",
+      "patterns": ["location", "Where does he live?", "City", "Where is he from?", "country", "current location", "based in", "hometown"],
+      "responses": ["He is currently based in Pune, India. His hometown is Jamshedpur, Jharkhand."]
+    },
+    {
+      "tag": "age",
+      "patterns": ["how old is he", "age", "birth date", "when was he born"],
+      "responses": ["He is 26 years old."]
+    },
+    {
+      "tag": "resume",
+      "patterns": ["resume", "Download resume", "CV", "Show me his resume", "Do you have a resume?"],
+      "responses": ["You can view and download his Resume on the 'Resume' page of this site."]
+    },
+    {
+      "tag": "projects",
+      "patterns": ["projects", "project", "What projects?", "Show me his work", "Portfolio", "GitHub", "apps", "built"],
+      "responses": ["He has built this Portfolio Site, a CRUD Blog App, and various Python Automation scripts. Check his GitHub!"]
+    }
+  ]
+}

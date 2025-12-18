@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <section class="hero" style="padding: 30px 20px; text-align: center;">
+        <h1 style="font-size: 2.5rem; margin: 0;">My Blog</h1>
+        <p style="opacity: 0.9; margin-top: 10px;">Sharing my journey in Tech, Python, and Life.</p>
+    </section>
+
+    <div class="container" style="display: flex; flex-wrap: wrap; gap: 40px; margin-bottom: 60px;">
+
+        <div style="flex: 2; min-width: 300px;">
+
+            {% if posts %}
+                {% for post in posts %}
+                    {% set post_link = '#' %}
+                    {% if post.id == 1 %}
+                        {% set post_link = url_for('article_1') %}
+                    {% elif post.id == 2 %}
+                        {% set post_link = url_for('article_2') %}
+                    {% else %}
+                        {% set post_link = url_for('post', post_id=post.id) %}
+                    {% endif %}
+
+                    {% set badge_bg = '#e0f2fe' %}
+                    {% set badge_color = '#0284c7' %}
+                    {% if post.category == 'Python' %}
+                        {% set badge_bg = '#dcfce7' %}
+                        {% set badge_color = '#16a34a' %}
+                    {% endif %}
+
+                    <div class="card" style="width: 100%; margin-bottom: 30px; transition: transform 0.2s;">
+                        <span style="background-color: {{ badge_bg }}; color: {{ badge_color }}; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">
+                            #{{ post.category }}
+                        </span>
+                        <h2 style="margin-top: 15px; margin-bottom: 10px;">
+                            <a href="{{ post_link }}" style="text-decoration: none; color: var(--text-color);">
+                                {{ post.title }}
+                            </a>
+                        </h2>
+                        <small style="color: gray; display: block; margin-bottom: 15px;">
+                            <i class="far fa-calendar-alt"></i> {{ post.date }}
+                        </small>
+                        <p style="opacity: 0.8; line-height: 1.6;">
+                            {{ post.content[:150] }}... </p>
+                        <a href="{{ post_link }}" style="color: var(--primary-color); text-decoration: none; font-weight: bold; display: inline-block; margin-top: 10px;">
+                            Read More <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="card" style="text-align: center; padding: 40px;">
+                    <h3>No posts found in this category.</h3>
+                    <a href="{{ url_for('blog') }}" class="btn-nav" style="margin-top: 20px; display: inline-block;">View All Posts</a>
+                </div>
+            {% endif %}
+
+        </div>
+
+        <aside style="flex: 1; min-width: 250px;">
+
+            <div class="card" style="margin-bottom: 30px; padding: 25px;">
+                <h3 style="margin-bottom: 15px; font-size: 1.2rem;">Search</h3>
+                <div style="display: flex;">
+                    <input type="text" placeholder="Search articles..." style="
+                        width: 100%;
+                        padding: 10px;
+                        border: 1px solid var(--border-color);
+                        border-radius: 5px 0 0 5px;
+                        outline: none;">
+                    <button style="
+                        background-color: var(--primary-color);
+                        color: white;
+                        border: none;
+                        padding: 0 15px;
+                        border-radius: 0 5px 5px 0;
+                        cursor: pointer;">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 30px; padding: 25px;">
+                <h3 style="margin-bottom: 15px; font-size: 1.2rem;">Categories</h3>
+                <ul style="list-style: none; padding: 0;">
+
+                    <li style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
+                        <a href="{{ url_for('blog', category='Python') }}" style="text-decoration: none; color: var(--text-color); display: flex; justify-content: space-between;">
+                            <span><i class="fas fa-angle-right" style="color: var(--primary-color);"></i> Python</span>
+                            <span style="background: #eee; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem;">1</span>
+                        </a>
+                    </li>
+
+                    <li style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
+                        <a href="{{ url_for('blog', category='Web Dev') }}" style="text-decoration: none; color: var(--text-color); display: flex; justify-content: space-between;">
+                            <span><i class="fas fa-angle-right" style="color: var(--primary-color);"></i> Web Dev</span>
+                            <span style="background: #eee; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem;">1</span>
+                        </a>
+                    </li>
+
+                    <li style="margin-bottom: 10px;">
+                        <a href="{{ url_for('blog') }}" style="text-decoration: none; color: var(--text-color); display: flex; justify-content: space-between;">
+                            <span><i class="fas fa-angle-right" style="color: var(--primary-color);"></i> View All</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card" style="padding: 25px; background: linear-gradient(135deg, var(--primary-color), #60a5fa); color: white;">
+                <h3 style="margin-bottom: 10px; color: white;">Subscribe</h3>
+                <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 15px;">Get the latest posts delivered right to your inbox.</p>
+
+                <form action="{{ url_for('subscribe') }}" method="POST">
+                    <input type="email" name="email" placeholder="Your email" required
+                           style="width: 100%; padding: 10px; border-radius: 5px; border: none; margin-bottom: 10px; outline: none;">
+                    <button type="submit" class="btn-white" style="width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; border: none;">
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+
+        </aside>
+
+    </div>
+
+{% endblock %}

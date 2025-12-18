@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container" style="max-width: 800px; padding: 60px 20px;">
+
+    <header style="margin-bottom: 40px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;">
+        <span style="background-color: #dcfce7; color: #16a34a; padding: 5px 10px; border-radius: 20px; font-size: 0.9rem; font-weight: bold;">
+            #Python
+        </span>
+        <h1 style="font-size: 2.5rem; margin-top: 15px; margin-bottom: 10px;">Why I Chose Python?</h1>
+        <div style="color: gray; font-size: 0.9rem;">
+            <span><i class="far fa-calendar-alt"></i> Dec 12, 2025</span>
+            <span style="margin: 0 10px;">|</span>
+            <span><i class="far fa-user"></i> By Ijaj Hussain</span>
+        </div>
+    </header>
+
+    <article style="line-height: 1.8; font-size: 1.1rem; opacity: 0.9;">
+
+        <p>
+            In the world of programming, there are endless languages to choose from—Java, C++, JavaScript, Go.
+            But as a <strong>System Analyst</strong> focused on backend efficiency and data handling,
+            <strong>Python</strong> was the obvious choice for me. Here is why.
+        </p>
+
+        <h3 style="color: var(--primary-color); margin-top: 30px;">1. Readability & Efficiency</h3>
+        <p>
+            Python reads like English. When I am writing automation scripts or debugging server issues at HPE,
+            I don't want to spend hours fighting with complex syntax. Python allows me to write logic
+            fast and keep my code clean.
+        </p>
+
+        <h3 style="color: var(--primary-color); margin-top: 30px;">2. The Data & AI Ecosystem</h3>
+        <p>
+            My work often intersects with data analysis. Python is the undisputed king of data.
+            Libraries like <strong>Pandas</strong>, <strong>NumPy</strong>, and <strong>Matplotlib</strong> make it incredibly powerful
+            for analyzing system logs and performance metrics.
+        </p>
+        <p>
+            Plus, building features like my portfolio's <strong>AI Chatbot</strong> was simple thanks to Python's
+            easy string manipulation and JSON handling capabilities.
+        </p>
+
+        <h3 style="color: var(--primary-color); margin-top: 30px;">3. Versatility (Backend + Scripting)</h3>
+        <p>
+            I love that I can use the same language to:
+        </p>
+        <ul style="margin-bottom: 20px;">
+            <li>Build a full-stack web app (using <strong>Flask</strong>).</li>
+            <li>Write a quick automation script for Linux servers.</li>
+            <li>Analyze database records.</li>
+        </ul>
+
+        <h3 style="color: var(--primary-color); margin-top: 30px;">Conclusion</h3>
+        <p>
+            For me, Python isn't just a language; it's a tool that bridges the gap between
+            software development and system operations (DevOps). It allows me to build scalable solutions
+            without getting bogged down in boilerplate code.
+        </p>
+
+    </article>
+
+    <div style="margin-top: 50px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+        <a href="{{ url_for('blog') }}" class="btn-nav">
+            <i class="fas fa-arrow-left"></i> Back to Blog
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

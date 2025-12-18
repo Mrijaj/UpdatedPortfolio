@@ -1,0 +1,17 @@
+{% macro hero(title, description, show_buttons=False) %}
+<header class="hero">
+    <div class="hero-content">
+        <h1>{{ title }}</h1>
+        {% if description %}
+            <p>{{ description }}</p>
+        {% endif %}
+
+        {% if show_buttons %}
+            <div class="hero-buttons">
+                <a href="{{ url_for('resume') }}" class="btn-white">View Resume</a>
+                <a href="{{ url_for('contact') }}" class="btn-white">Get in Touch</a>
+            </div>
+        {% endif %}
+    </div>
+</header>
+{% endmacro %}

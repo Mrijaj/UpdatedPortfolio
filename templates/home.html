@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% from "macros.html" import hero %}
+
+{% block content %}
+    {{ hero("Hi, I'm Ijaj Hussain", "DataScience Learner | Python Enthusiast | Problem Solver", True) }}
+
+    <section class="services">
+        <h2>What I Do</h2>
+        <div class="cards-container">
+
+            <div class="card">
+                <div class="icon-box">
+                    <i class="fa-solid fa-server"></i>
+                </div>
+                <h3>Backend Development</h3>
+                <p>Building scalable APIs and web applications using <strong>Python</strong> and <strong>Flask</strong>.</p>
+            </div>
+
+            <div class="card">
+                <div class="icon-box">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h3>Data Engineering</h3>
+                <p>Designing <strong>ETL pipelines</strong>, performing data analysis, and transforming raw data into insights.</p>
+            </div>
+
+            <div class="card">
+                <div class="icon-box">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+                <h3>Database Admin (DBA)</h3>
+                <p>Expert in <strong>SQL</strong>, schema design, and database optimization/management.</p>
+            </div>
+
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container" style="max-width: 800px; padding: 60px 20px;">
+
+    <header style="margin-bottom: 40px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;">
+        <span style="background-color: #e0f2fe; color: #0284c7; padding: 5px 10px; border-radius: 20px; font-size: 0.9rem; font-weight: bold;">
+            #WebDev
+        </span>
+        <h1 style="font-size: 2.5rem; margin-top: 15px; margin-bottom: 10px;">How I Built My AI-Powered Portfolio with Flask</h1>
+        <div style="color: gray; font-size: 0.9rem;">
+            <span><i class="far fa-calendar-alt"></i> Dec 18, 2025</span>
+            <span style="margin: 0 10px;">|</span>
+            <span><i class="far fa-user"></i> By Ijaj Hussain</span>
+        </div>
+    </header>
+
+    <article style="line-height: 1.8; font-size: 1.1rem; opacity: 0.9;">
+
+        <p>
+            As a System Analyst and Python enthusiast, I didn't want a generic drag-and-drop portfolio.
+            I wanted something that proved I could code, manage a backend, and deploy a real application.
+            That’s why I chose <strong>Flask</strong>.
+        </p>
+
+        <h3 style="color: var(--primary-color); margin-top: 30px;">1. The Tech Stack</h3>
+        <p>
+            I kept the stack simple but powerful. I used <strong>Python & Flask</strong> for the backend routing,
+            <strong>Jinja2</strong> for dynamic HTML templating, and vanilla <strong>CSS/JavaScript</strong> for the frontend.
+            No heavy frameworks like React—just pure, clean code.
+        </p>
+
+        <h3 style="color: var(--primary-color); margin-top: 30px;">2. The AI Chatbot (Elia)</h3>
+        <p>
+            The highlight of this site is <strong>Elia</strong>, my virtual assistant. Instead of a boring contact form,
+            users can chat with Elia to learn about my skills.
+        </p>
+        <p>
+            I built Elia using a JSON-based intent system. The frontend uses JavaScript `fetch` API to send messages to Flask,
+            which processes the input and finds the best matching response from my `intents.json` file.
+        </p>
+
+        <div style="background: #1e1e1e; color: #fff; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.9rem; margin: 20px 0;">
+            <span style="color: #6a9955;"># A snippet of the logic</span><br>
+            <span style="color: #c586c0;">if</span> message <span style="color: #c586c0;">in</span> intents:<br>
+            &nbsp;&nbsp;return response<br>
+            <span style="color: #c586c0;">else</span>:<br>
+            &nbsp;&nbsp;return <span style="color: #ce9178;">"I'm still learning!"</span>
+        </div>
+
+        <h3 style="color: var(--primary-color); margin-top: 30px;">3. Deployment on Render</h3>
+        <p>
+            I deployed the site using <strong>Render</strong>. I created a `Procfile` to tell the server to use
+            <strong>Gunicorn</strong> as the production server. This ensures the site is fast and stable, unlike the built-in Flask development server.
+        </p>
+
+        <h3 style="color: var(--primary-color); margin-top: 30px;">Conclusion</h3>
+        <p>
+            Building this portfolio taught me that you don't need complex tools to build something professional.
+            Python and Flask provide everything needed to create a fast, dynamic, and personalized web presence.
+        </p>
+
+    </article>
+
+    <div style="margin-top: 50px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+        <a href="{{ url_for('blog') }}" class="btn-nav">
+            <i class="fas fa-arrow-left"></i> Back to Blog
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

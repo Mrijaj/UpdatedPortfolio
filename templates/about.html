@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% from "macros.html" import hero %}
+
+{% block content %}
+
+    {{ hero("About Me", "System Analyst @ HPE | Python Developer | Problem Solver", True) }}
+
+    <section class="services" style="text-align: left; max-width: 900px; margin: 0 auto;">
+
+        <div class="card" style="width: 100%; padding: 40px; margin-bottom: 40px;">
+            <h2 style="color: var(--primary-color); margin-bottom: 20px;">My Journey</h2>
+
+            <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-color); margin-bottom: 20px;">
+                I started my professional journey at
+                <a href="https://www.hpe.com/in/en/home.html" target="_blank" rel="noopener noreferrer" style="color: var(--primary-color); text-decoration: none; font-weight: bold;">Hewlett Packard Enterprise (HPE)</a>
+                as a <strong>Technical Support Engineer</strong>. It was my first real exposure to production systems — <strong>Linux servers, enterprise environments</strong>, real customers, and real consequences when things went wrong. Every day, I learned how systems fail, how they recover, and how critical stability is in the real world.
+            </p>
+
+            <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-color); margin-bottom: 20px;">
+                But somewhere along the way, I realized something important. While I was good at fixing problems, what truly excited me was understanding <em>why</em> they existed. I found myself more interested in the <strong>logic behind applications</strong> than the symptoms they produced. After my shifts, I would open my laptop again — not to resolve tickets, but to <strong>write Python code</strong>.
+            </p>
+
+            <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-color); margin-bottom: 20px;">
+                I began building small scripts, then moved on to <strong>Flask applications</strong>, learning how requests flow, how data is handled, and how systems behave under load. I explored Linux deeply, automated repetitive tasks, and slowly introduced myself to <strong>DevOps concepts</strong>. Writing code felt different. It felt like progress.
+            </p>
+
+            <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-color); margin-bottom: 20px;">
+                At one point, I gathered the courage to speak to my manager about moving into a development role. The response was honest — there was no immediate possibility. It wasn’t rejection, but it was a pause. That moment stayed with me. I realized that if I waited, I would remain where I was. So instead of waiting for permission, I decided to <strong>prepare myself for the role I wanted</strong>. I doubled down on learning. I strengthened my foundation in Python, worked extensively with Flask, and improved my understanding of data handling using <strong>Pandas and NumPy</strong>.
+            </p>
+
+            <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-color);">
+                Today, my goal is clear. I want to move into a development-focused role where I can <strong>combine my support experience with my passion for building software</strong>. I bring with me a strong respect for <strong>system reliability</strong> and clean code. This career shift is a deliberate choice driven by the belief that I can create more value by <strong>building solutions rather than only supporting them</strong>.
+            </p>
+        </div>
+
+        <h2 style="text-align: center; margin-bottom: 30px;">What Drives Me</h2>
+
+        <div class="cards-container" style="flex-direction: column;">
+
+            <div class="card" style="width: 100%;">
+                <div class="icon-box"><i class="fas fa-lightbulb"></i></div>
+                <h3>Problem Solving</h3>
+                <p>I love taking complex problems and breaking them down into simple, automated coding solutions.</p>
+            </div>
+
+            <div class="card" style="width: 100%;">
+                <div class="icon-box"><i class="fas fa-users"></i></div>
+                <h3>Collaboration</h3>
+                <p>Working with cross-functional teams at HPE has taught me the value of clear communication and teamwork.</p>
+            </div>
+
+            <div class="card" style="width: 100%;">
+                <div class="icon-box"><i class="fas fa-rocket"></i></div>
+                <h3>Continuous Learning</h3>
+                <p>Whether it's mastering a new Python library or learning CI/CD pipelines, I am always upskilling.</p>
+            </div>
+        </div>
+
+    </section>
+
+{% endblock %}
