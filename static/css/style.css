@@ -574,32 +574,67 @@ body {
 }
 
 /* ===========================
-   16. MOBILE RESPONSIVENESS (FINAL FIX)
+   16. MOBILE RESPONSIVENESS (FINAL POLISHED HEADER)
    =========================== */
 @media (max-width: 768px) {
 
-    /* --- 1. Fix the Squished Navbar --- */
+    /* --- 1. Compact Navbar Layout --- */
     .navbar {
-        flex-direction: column !important; /* Stack Logo on top of Links */
-        padding: 15px !important;
-        gap: 15px; /* Add space between logo and links */
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: space-between !important;
+        padding: 15px 20px !important;
+        gap: 15px;
     }
 
+    /* Row 1: Logo (Left) */
+    .logo {
+        order: 1;
+        flex: 1;
+    }
+
+    /* Row 1: Theme Icon (Right) */
+    #theme-icon {
+        order: 2;
+        margin-left: auto;
+        padding: 5px;
+    }
+
+    /* Row 2: Navigation Links (The Sandwich) */
     .nav-links {
+        order: 3;
         width: 100%;
-        justify-content: center; /* Center the links */
-        flex-wrap: wrap; /* Allow links to wrap to two lines if needed */
-        gap: 15px; /* Add breathing room between links */
+        justify-content: space-between;
+        padding: 15px 0; /* More breathing room */
+
+        /* HERE ARE THE VISIBLE LINES */
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+
+        margin: 10px 0;
     }
 
-    /* --- 2. Fix the Body Layout --- */
+    .nav-links a {
+        font-size: 15px; /* Slightly bigger for easy tapping */
+        padding: 5px;
+        font-weight: 500;
+    }
+
+    /* Row 3: Contact Button (Full Width) */
+    .btn-nav {
+        order: 4;
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+    }
+
+    /* --- 2. Fix Body & Cards --- */
     .container, .hero, .services, .resume-container {
         padding-left: 20px !important;
         padding-right: 20px !important;
         width: 100% !important;
     }
 
-    /* --- 3. Stack Cards Vertically --- */
     .cards-container, .resume-container {
         flex-direction: column !important;
         align-items: center;
@@ -611,13 +646,13 @@ body {
         margin-bottom: 20px;
     }
 
-    /* --- 4. Chatbot Adjustment (Corrected for Mobile) --- */
+    /* --- 3. Chatbot Fix --- */
     .chat-box {
         position: fixed !important;
-        width: 90vw !important;     /* 90% of the viewport width */
-        right: 5vw !important;      /* Center it (5% from right) */
+        width: 90vw !important;
+        right: 5vw !important;
         bottom: 90px !important;
-        height: 50vh !important;    /* Use half the screen height */
+        height: 50vh !important;
         max-height: 500px;
     }
 }
