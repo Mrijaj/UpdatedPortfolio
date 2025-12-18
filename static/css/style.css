@@ -611,10 +611,13 @@ body {
         margin-bottom: 20px;
     }
 
-    /* --- 4. Chatbot Adjustment --- */
+    /* --- 4. Chatbot Adjustment (Corrected for Mobile) --- */
     .chat-box {
-        width: 90% !important;
-        right: 5% !important;
-        bottom: 80px !important;
+        position: fixed !important;
+        width: 90vw !important;     /* 90% of the viewport width */
+        right: 5vw !important;      /* Center it (5% from right) */
+        bottom: 90px !important;
+        height: 50vh !important;    /* Use half the screen height */
+        max-height: 500px;
     }
 }
