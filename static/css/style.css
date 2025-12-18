@@ -2,34 +2,30 @@
    1. COLOR VARIABLES
    =========================== */
 :root {
-    /* Light Mode (Default) */
     --bg-color: #f8f9fa;
     --text-color: #333;
     --nav-bg: #ffffff;
     --card-bg: #ffffff;
     --primary-color: #2563eb;
-    --border-color: #dddddd;
+    --border-color: #e5e7eb;
     --shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
 .dark-mode {
-    /* Dark Mode Overrides */
     --bg-color: #121212;
     --text-color: #e0e0e0;
     --nav-bg: #1e1e1e;
     --card-bg: #1e1e1e;
     --primary-color: #3b82f6;
-    --border-color: #444444;
+    --border-color: #333333;
     --shadow: 0 4px 15px rgba(255,255,255,0.05);
 }
 
 /* ===========================
-   2. GLOBAL RESET & BASE STYLES
+   2. GLOBAL RESET
    =========================== */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    margin: 0; padding: 0; box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -37,622 +33,171 @@
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    display: flex; flex-direction: column; min-height: 100vh;
 }
+
+html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 
 /* ===========================
-   3. UTILITY CLASSES (DRY LOGIC)
-   =========================== */
-.container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.navbar, .nav-links, .hero-buttons, .cards-container,
-.footer-content, .social-links, .icon-box, #theme-icon {
-    display: flex;
-    align-items: center;
-}
-
-/* ===========================
-   4. COMPONENT: BUTTONS
-   =========================== */
-.btn-nav, .btn-white, .btn-submit {
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: inline-block;
-}
-
-.btn-nav, .btn-submit {
-    background-color: var(--primary-color);
-    color: white !important;
-}
-
-.btn-nav:hover, .btn-submit:hover {
-    transform: scale(1.05);
-    opacity: 0.9;
-}
-
-.btn-white {
-    background-color: white;
-    color: var(--primary-color);
-    border-radius: 50px;
-    padding: 12px 30px;
-}
-
-.btn-white:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-/* ===========================
-   5. COMPONENT: CARDS & FORMS
-   =========================== */
-.card, .contact-form {
-    background: var(--card-bg);
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border-color);
-    text-align: left;
-}
-
-/* ===========================
-   6. NAVBAR
+   3. NAVBAR (DESKTOP DEFAULT)
    =========================== */
 .navbar {
+    display: flex;
     justify-content: space-between;
-    padding: 15px 5%;
+    align-items: center;
+    padding: 10px 5%;
     background-color: var(--nav-bg);
     box-shadow: var(--shadow);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    position: sticky; top: 0; z-index: 1000;
+    height: 70px; /* Fixed height for stability */
 }
 
+/* Logo */
 .logo {
     color: var(--primary-color);
     font-size: 24px;
     font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
 }
 
+/* Links Container */
 .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
     list-style: none;
-    gap: 25px;
 }
 
+/* Text Links */
 .nav-links a {
     text-decoration: none;
     color: var(--text-color);
     font-size: 16px;
     font-weight: 500;
+    padding: 5px 10px;
+    white-space: nowrap; /* Prevents text wrapping */
 }
 
-.nav-links a:hover {
-    color: var(--primary-color);
+.nav-links a:hover { color: var(--primary-color); }
+.nav-links a.active { color: var(--primary-color); font-weight: 700; }
+
+/* Contact Button */
+.btn-nav {
+    background-color: var(--primary-color);
+    color: white !important;
+    padding: 8px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
+/* Theme Icon */
 #theme-icon {
-    cursor: pointer;
-    font-size: 1.2rem;
-    padding: 10px;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    justify-content: center;
-    color: var(--text-color);
-    transition: all 0.3s ease;
-}
-
-#theme-icon:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-    transform: rotate(15deg);
-    color: var(--primary-color);
-}
-
-.dark-mode #theme-icon:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    cursor: pointer; font-size: 1.2rem; margin-left: 15px; color: var(--text-color);
 }
 
 /* ===========================
-   7. HERO SECTION (UPDATED: COMPACT SIZE)
-   =========================== */
-.hero {
-    background-color: var(--primary-color);
-    color: white;
-    text-align: center;
-    /* Reduced padding to remove extra space */
-    padding: 30px 20px !important;
-    min-height: auto;
-}
-
-.hero h1 {
-    /* Smaller font for compact look */
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-}
-
-.hero p {
-    font-size: 1.1rem;
-    opacity: 0.9;
-    margin-bottom: 15px; /* Reduced margin */
-}
-
-.hero-buttons {
-    justify-content: center;
-    gap: 15px;
-}
-
-.dark-mode .hero {
-    background-color: var(--nav-bg);
-    color: var(--text-color);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.dark-mode .hero .btn-white {
-    background-color: var(--primary-color);
-    color: white;
-    border: 1px solid var(--primary-color);
-}
-
-/* ===========================
-   8. SERVICES & CONTENT
-   =========================== */
-.services {
-    text-align: center;
-    padding: 60px 5%;
-}
-
-.services h2 {
-    color: var(--text-color);
-    margin-bottom: 40px;
-    font-size: 32px;
-}
-
-.cards-container {
-    justify-content: center;
-    gap: 30px;
-    flex-wrap: wrap;
-}
-
-.card { width: 320px; }
-
-.icon-box {
-    background-color: rgba(37, 99, 235, 0.1);
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.icon-box i {
-    color: var(--primary-color);
-    font-size: 24px;
-}
-
-.card h3 {
-    margin-bottom: 10px;
-    font-size: 20px;
-    color: var(--text-color);
-}
-
-.card p {
-    color: var(--text-color);
-    opacity: 0.8;
-    font-size: 15px;
-    line-height: 1.6;
-}
-
-/* ===========================
-   9. FOOTER
-   =========================== */
-.footer {
-    background-color: var(--nav-bg);
-    color: var(--text-color);
-    padding: 30px 0;
-    margin-top: auto;
-    border-top: 1px solid var(--border-color);
-    text-align: center;
-    width: 100%;
-}
-
-.footer-content { flex-direction: column; gap: 15px; }
-
-.social-links { justify-content: center; gap: 20px; }
-
-.social-links a {
-    color: var(--text-color);
-    font-size: 20px;
-    transition: color 0.3s, transform 0.2s;
-}
-
-.social-links a:hover {
-    color: var(--primary-color);
-    transform: translateY(-3px);
-}
-
-/* ===========================
-   10. CONTACT FORM
-   =========================== */
-.contact-section {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
-
-.contact-form { padding: 40px; }
-
-.form-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: var(--text-color);
-}
-
-.form-control {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-.form-control:focus {
-    border-color: var(--primary-color);
-}
-
-.btn-submit { width: 100%; font-size: 18px; }
-
-/* ===========================
-   11. RESUME LAYOUT
-   =========================== */
-.resume-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-    max-width: 1200px;
-    margin: 0 auto 40px auto;
-    padding: 0 20px;
-    align-items: flex-start;
-}
-
-.resume-sidebar { flex: 1; min-width: 300px; }
-.resume-main { flex: 2; min-width: 300px; }
-
-.resume-heading {
-    border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    color: var(--text-color);
-}
-
-/* ===========================
-   12. TERMINAL TOAST EFFECT
-   =========================== */
-.terminal-toast {
-    visibility: hidden; /* Hidden by default */
-    min-width: 250px;
-    background-color: #1e1e1e; /* VS Code Dark Grey */
-    color: #00ff00; /* Hacker Green */
-    text-align: left;
-    border-radius: 4px;
-    padding: 12px 20px;
-    position: fixed;
-    z-index: 9999;
-    left: 20px;
-    bottom: 30px;
-    font-family: 'Courier New', Courier, monospace; /* Code font */
-    font-size: 14px;
-    border-left: 4px solid var(--primary-color);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    opacity: 0;
-    transition: opacity 0.3s, bottom 0.3s;
-}
-
-/* Class added by JS to show the box */
-.terminal-toast.show {
-    visibility: visible;
-    opacity: 1;
-    bottom: 50px; /* Slight slide up animation */
-}
-
-/* Blinking Cursor Animation */
-.cursor {
-    animation: blink 1s step-end infinite;
-}
-
-@keyframes blink {
-    50% { opacity: 0; }
-}
-
-/* ===========================
-   13. CHATBOT WIDGET
-   =========================== */
-#chat-widget {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 10000;
-}
-
-/* 1. Toggle Button */
-#chat-toggle-btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    font-size: 24px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    transition: transform 0.3s;
-}
-
-#chat-toggle-btn:hover {
-    transform: scale(1.1);
-}
-
-/* 2. Chat Box Window */
-.chat-box {
-    width: 300px;
-    height: 400px;
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    position: absolute;
-    bottom: 80px; /* Above the button */
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.chat-box.hidden {
-    display: none;
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-/* 3. Header */
-.chat-header {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-}
-
-#chat-close-btn {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-/* 4. Messages Area */
-.chat-messages {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    background-color: var(--bg-color);
-    font-size: 0.9rem;
-}
-
-.message {
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 8px;
-    max-width: 80%;
-    word-wrap: break-word;
-}
-
-.bot-message {
-    background-color: #e9ecef;
-    color: #333;
-    align-self: flex-start;
-}
-
-.user-message {
-    background-color: var(--primary-color);
-    color: white;
-    align-self: flex-end;
-    margin-left: auto; /* Pushes to right */
-}
-
-/* 5. Input Area */
-.chat-input-area {
-    display: flex;
-    border-top: 1px solid var(--border-color);
-    padding: 10px;
-    background-color: var(--card-bg);
-}
-
-#user-input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    margin-right: 10px;
-    outline: none;
-}
-
-#send-btn {
-    background: none;
-    border: none;
-    color: var(--primary-color);
-    font-size: 18px;
-    cursor: pointer;
-}
-
-/* ===========================
-   14. CHAT MINIMIZE LOGIC
-   =========================== */
-
-/* Align the buttons in the header */
-.chat-controls {
-    display: flex;
-    gap: 10px;
-}
-
-/* Style the buttons (shared style) */
-/* Added #chat-clear-btn here */
-#chat-minimize-btn, #chat-close-btn, #chat-clear-btn {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    transition: opacity 0.2s;
-}
-
-#chat-minimize-btn:hover, #chat-close-btn:hover, #chat-clear-btn:hover {
-    opacity: 0.7;
-}
-
-/* THE MINIMIZED STATE CLASS */
-.chat-box.minimized {
-    height: 60px !important;
-    overflow: hidden;
-    border-radius: 12px 12px 0 0;
-}
-
-/* ===========================
-   15. ACTIVE NAVIGATION STATE
-   =========================== */
-
-/* Style for Text Links (Home, About, etc.) */
-.nav-links a.active {
-    color: var(--primary-color);
-    font-weight: 700;
-    position: relative;
-}
-
-/* Add a sleek underline to active links */
-.nav-links a.active::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 3px;
-    bottom: -5px;
-    left: 0;
-    background-color: var(--primary-color);
-    border-radius: 2px;
-}
-
-/* Style for the Contact Button when active */
-.btn-nav.active-btn {
-    background-color: transparent; /* Make background transparent */
-    border: 2px solid var(--primary-color); /* Add border */
-    color: var(--primary-color) !important; /* Change text color */
-    box-shadow: inset 0 0 5px rgba(37, 99, 235, 0.1);
-}
-
-/* ===========================
-   16. MOBILE RESPONSIVENESS (FINAL POLISHED HEADER)
+   4. MOBILE & TABLET (THE SCROLLABLE FIX)
    =========================== */
 @media (max-width: 768px) {
 
-    /* --- 1. Compact Navbar Layout --- */
     .navbar {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        justify-content: space-between !important;
-        padding: 15px 20px !important;
-        gap: 15px;
+        flex-direction: column; /* Stack Logo Row on top of Links Row */
+        align-items: flex-start;
+        padding: 10px 15px;
+        height: auto; /* Allow growth */
+        gap: 10px;
     }
 
-    /* Row 1: Logo (Left) */
-    .logo {
-        order: 1;
-        flex: 1;
+    /* ROW 1: Logo + Theme Icon */
+    .mobile-top-row {
+        display: flex !important; /* Force flex for this row */
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
     }
 
-    /* Row 1: Theme Icon (Right) */
-    #theme-icon {
-        order: 2;
-        margin-left: auto;
-        padding: 5px;
-    }
+    /* We need to use JS to wrap logo/icon, OR we use CSS grid tricks.
+       Since we can't change HTML structure easily, we use Order. */
 
-    /* Row 2: Navigation Links (The Sandwich) */
+    .logo { order: 1; flex: 1; }
+    #theme-icon { order: 2; margin: 0; }
+
+    /* ROW 2: The Horizontal Scrollable Links */
     .nav-links {
         order: 3;
         width: 100%;
-        justify-content: space-between;
-        padding: 15px 0; /* More breathing room */
-
-        /* HERE ARE THE VISIBLE LINES */
-        border-top: 1px solid var(--border-color);
-        border-bottom: 1px solid var(--border-color);
-
-        margin: 10px 0;
+        display: flex;
+        flex-direction: row; /* FORCE ROW */
+        overflow-x: auto;    /* Enable Horizontal Scroll */
+        white-space: nowrap; /* Prevent wrapping */
+        gap: 15px;
+        padding-bottom: 5px; /* Space for scrollbar */
+        -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
     }
+
+    /* Hide Scrollbar for cleaner look */
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-links { -ms-overflow-style: none; scrollbar-width: none; }
 
     .nav-links a {
-        font-size: 15px; /* Slightly bigger for easy tapping */
-        padding: 5px;
-        font-weight: 500;
+        padding: 8px 12px;
+        background-color: rgba(0,0,0,0.03); /* Subtle bubble */
+        border-radius: 20px;
+        font-size: 14px;
     }
 
-    /* Row 3: Contact Button (Full Width) */
+    .nav-links a.active {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    /* Make Contact Button fit in the scroll line */
     .btn-nav {
-        order: 4;
-        width: 100%;
-        text-align: center;
-        padding: 12px;
+        padding: 8px 15px;
+        font-size: 14px;
     }
 
-    /* --- 2. Fix Body & Cards --- */
-    .container, .hero, .services, .resume-container {
-        padding-left: 20px !important;
-        padding-right: 20px !important;
-        width: 100% !important;
-    }
+    /* Fix Body Padding */
+    .container { padding: 0 15px; width: 100%; }
+    .hero { padding: 40px 15px; }
 
-    .cards-container, .resume-container {
-        flex-direction: column !important;
-        align-items: center;
-    }
+    /* Stack content cards */
+    .cards-container, .resume-container { flex-direction: column; }
+    .card { width: 100%; margin-bottom: 20px; }
+    .resume-sidebar, .resume-main { width: 100%; min-width: auto; }
+}
 
-    .card {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin-bottom: 20px;
-    }
+/* ===========================
+   5. OTHER SECTIONS (Unchanged)
+   =========================== */
+.hero { background-color: var(--primary-color); color: white; text-align: center; padding-top: 50px; padding-bottom: 50px; }
+.hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
+.hero p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 20px; }
+.hero-buttons { display: flex; justify-content: center; gap: 15px; }
+.btn-white { background-color: white; color: var(--primary-color); padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; }
 
-    /* --- 3. Chatbot Fix --- */
-    .chat-box {
-        position: fixed !important;
-        width: 90vw !important;
-        right: 5vw !important;
-        bottom: 90px !important;
-        height: 50vh !important;
-        max-height: 500px;
-    }
+.dark-mode .hero { background-color: var(--nav-bg); color: var(--text-color); border-bottom: 1px solid var(--border-color); }
+.dark-mode .hero .btn-white { background-color: var(--primary-color); color: white; }
+
+.services { text-align: center; padding: 60px 5%; }
+.services h2 { margin-bottom: 40px; }
+.cards-container { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+.card { width: 320px; text-align: left; background: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); }
+.icon-box { display: flex; align-items: center; justify-content: center; background-color: rgba(37, 99, 235, 0.1); width: 50px; height: 50px; border-radius: 10px; margin-bottom: 20px; }
+.icon-box i { color: var(--primary-color); font-size: 24px; }
+
+.footer { background-color: var(--nav-bg); color: var(--text-color); padding: 20px 0; border-top: 1px solid var(--border-color); text-align: center; margin-top: auto; }
+.footer-content { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.social-links { display: flex; gap: 20px; }
+
+.chat-box { position: fixed; bottom: 80px; right: 20px; width: 300px; height: 400px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; z-index: 9999; }
+.chat-box.hidden { display: none; }
+#chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 10000; }
+#chat-toggle-btn { width: 60px; height: 60px; border-radius: 50%; background: var(--primary-color); color: white; border: none; font-size: 24px; cursor: pointer; }
+
+@media (max-width: 768px) {
+    .chat-box { width: 90vw; right: 5vw; bottom: 90px; height: 50vh; }
 }
