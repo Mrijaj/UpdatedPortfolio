@@ -49,7 +49,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     background-color: var(--nav-bg);
     box-shadow: var(--shadow);
     position: sticky; top: 0; z-index: 1000;
-    height: 70px; /* Fixed height for stability */
+    height: 70px;
 }
 
 /* Logo */
@@ -76,7 +76,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     font-size: 16px;
     font-weight: 500;
     padding: 5px 10px;
-    white-space: nowrap; /* Prevents text wrapping */
+    white-space: nowrap;
 }
 
 .nav-links a:hover { color: var(--primary-color); }
@@ -99,52 +99,49 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 }
 
 /* ===========================
-   4. MOBILE & TABLET (THE SCROLLABLE FIX)
+   4. MOBILE & TABLET (SCROLLABLE MENU)
    =========================== */
 @media (max-width: 768px) {
 
     .navbar {
-        flex-direction: column; /* Stack Logo Row on top of Links Row */
+        flex-direction: column;
         align-items: flex-start;
         padding: 10px 15px;
-        height: auto; /* Allow growth */
+        height: auto;
         gap: 10px;
     }
 
     /* ROW 1: Logo + Theme Icon */
-    .mobile-top-row {
-        display: flex !important; /* Force flex for this row */
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
+    .logo { order: 1; flex: 1; width: 100%; display: flex; justify-content: space-between; align-items: center; }
+
+    /* We put the theme icon absolute to the right */
+    #theme-icon {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        margin: 0;
     }
 
-    /* We need to use JS to wrap logo/icon, OR we use CSS grid tricks.
-       Since we can't change HTML structure easily, we use Order. */
-
-    .logo { order: 1; flex: 1; }
-    #theme-icon { order: 2; margin: 0; }
-
-    /* ROW 2: The Horizontal Scrollable Links */
+    /* ROW 2: Horizontal Scrollable Links */
     .nav-links {
         order: 3;
         width: 100%;
         display: flex;
-        flex-direction: row; /* FORCE ROW */
+        flex-direction: row;
         overflow-x: auto;    /* Enable Horizontal Scroll */
-        white-space: nowrap; /* Prevent wrapping */
+        white-space: nowrap;
         gap: 15px;
-        padding-bottom: 5px; /* Space for scrollbar */
-        -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+        padding-bottom: 5px;
+        -webkit-overflow-scrolling: touch;
     }
 
-    /* Hide Scrollbar for cleaner look */
+    /* Hide Scrollbar */
     .nav-links::-webkit-scrollbar { display: none; }
     .nav-links { -ms-overflow-style: none; scrollbar-width: none; }
 
     .nav-links a {
         padding: 8px 12px;
-        background-color: rgba(0,0,0,0.03); /* Subtle bubble */
+        background-color: rgba(0,0,0,0.03);
         border-radius: 20px;
         font-size: 14px;
     }
@@ -154,24 +151,23 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
         color: white;
     }
 
-    /* Make Contact Button fit in the scroll line */
     .btn-nav {
         padding: 8px 15px;
         font-size: 14px;
     }
 
-    /* Fix Body Padding */
+    /* General Mobile Padding */
     .container { padding: 0 15px; width: 100%; }
     .hero { padding: 40px 15px; }
 
-    /* Stack content cards */
+    /* Stack Cards */
     .cards-container, .resume-container { flex-direction: column; }
     .card { width: 100%; margin-bottom: 20px; }
     .resume-sidebar, .resume-main { width: 100%; min-width: auto; }
 }
 
 /* ===========================
-   5. OTHER SECTIONS (Unchanged)
+   5. OTHER SECTIONS
    =========================== */
 .hero { background-color: var(--primary-color); color: white; text-align: center; padding-top: 50px; padding-bottom: 50px; }
 .hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
@@ -193,11 +189,67 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 .footer-content { display: flex; flex-direction: column; align-items: center; gap: 15px; }
 .social-links { display: flex; gap: 20px; }
 
-.chat-box { position: fixed; bottom: 80px; right: 20px; width: 300px; height: 400px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; z-index: 9999; }
-.chat-box.hidden { display: none; }
-#chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 10000; }
-#chat-toggle-btn { width: 60px; height: 60px; border-radius: 50%; background: var(--primary-color); color: white; border: none; font-size: 24px; cursor: pointer; }
+/* ===========================
+   6. CHATBOT (FORCE FIX)
+   =========================== */
+/* We use !important here to override any mobile caching or conflicts */
 
+#chat-widget {
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    z-index: 2147483647 !important; /* Max Z-Index */
+}
+
+#chat-toggle-btn {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50% !important;
+    background: var(--primary-color) !important;
+    color: white !important;
+    border: none !important;
+    font-size: 24px !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+}
+
+.chat-box {
+    position: fixed !important;
+    bottom: 90px !important;
+    right: 20px !important;
+    width: 300px !important;
+    height: 400px !important;
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    z-index: 2147483647 !important;
+}
+
+.chat-box.hidden {
+    display: none !important;
+}
+
+/* Chat Internals */
+.chat-header { background-color: var(--primary-color); color: white; padding: 15px; display: flex; justify-content: space-between; }
+.chat-messages { flex: 1; padding: 15px; overflow-y: auto; font-size: 0.9rem; }
+.message { margin-bottom: 10px; padding: 10px; border-radius: 8px; max-width: 80%; }
+.bot-message { background-color: #e9ecef; color: #333; align-self: flex-start; }
+.user-message { background-color: var(--primary-color); color: white; align-self: flex-end; }
+.chat-input-area { display: flex; padding: 10px; border-top: 1px solid var(--border-color); }
+#user-input { flex: 1; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; }
+#send-btn { background: none; border: none; color: var(--primary-color); font-size: 18px; margin-left: 10px; }
+#chat-minimize-btn, #chat-close-btn, #chat-clear-btn { background: none; border: none; color: white; cursor: pointer; }
+.chat-box.minimized { height: 60px !important; overflow: hidden; }
+
+/* Mobile Specific Chat Fix */
 @media (max-width: 768px) {
-    .chat-box { width: 90vw; right: 5vw; bottom: 90px; height: 50vh; }
+    .chat-box {
+        width: 90vw !important;
+        right: 5vw !important;
+        bottom: 90px !important;
+        height: 50vh !important;
+    }
 }
