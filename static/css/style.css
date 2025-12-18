@@ -574,41 +574,47 @@ body {
 }
 
 /* ===========================
-   16. MOBILE RESPONSIVENESS (ADDED)
+   16. MOBILE RESPONSIVENESS (FINAL FIX)
    =========================== */
 @media (max-width: 768px) {
-    /* 1. Stack Project Cards & Service Cards Vertically */
-    .cards-container {
-        flex-direction: column;
+
+    /* --- 1. Fix the Squished Navbar --- */
+    .navbar {
+        flex-direction: column !important; /* Stack Logo on top of Links */
+        padding: 15px !important;
+        gap: 15px; /* Add space between logo and links */
+    }
+
+    .nav-links {
+        width: 100%;
+        justify-content: center; /* Center the links */
+        flex-wrap: wrap; /* Allow links to wrap to two lines if needed */
+        gap: 15px; /* Add breathing room between links */
+    }
+
+    /* --- 2. Fix the Body Layout --- */
+    .container, .hero, .services, .resume-container {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        width: 100% !important;
+    }
+
+    /* --- 3. Stack Cards Vertically --- */
+    .cards-container, .resume-container {
+        flex-direction: column !important;
         align-items: center;
     }
 
-    /* 2. Ensure Cards take full width on mobile but don't get too wide */
     .card {
-        width: 100%;
-        max-width: 400px;
+        width: 100% !important;
+        max-width: 100% !important;
         margin-bottom: 20px;
     }
 
-    /* 3. Stack Resume Sections (Sidebar on top of Main content) */
-    .resume-container {
-        flex-direction: column;
-    }
-
-    .resume-sidebar, .resume-main {
-        width: 100%;
-        min-width: auto; /* Reset minimum width constraints */
-    }
-
-    /* 4. Fix Hero Text size for smaller screens */
-    .hero h1 {
-        font-size: 2rem;
-    }
-
-    /* 5. Ensure Chatbot fits small screens */
+    /* --- 4. Chatbot Adjustment --- */
     .chat-box {
-        width: 90vw; /* 90% of screen width */
-        right: 5vw;  /* Centered slightly */
-        bottom: 90px;
+        width: 90% !important;
+        right: 5% !important;
+        bottom: 80px !important;
     }
 }
