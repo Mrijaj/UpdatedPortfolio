@@ -31,31 +31,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ===========================
-    // 2. TERMINAL TOAST LOGIC
-    // ===========================
-    const logoLink = document.querySelector('.logo');
-    const toast = document.getElementById("terminal-toast");
-
-    if (logoLink && toast) {
-        logoLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetUrl = this.href;
-            toast.classList.add("show");
-            setTimeout(function() {
-                toast.classList.remove("show");
-                window.location.href = targetUrl;
-            }, 1200);
-        });
-    }
-
-    // ===========================
-    // 3. PERSISTENT CHATBOT LOGIC
+    // 2. CHATBOT LOGIC
     // ===========================
     const chatToggleBtn = document.getElementById('chat-toggle-btn');
     const chatBox = document.getElementById('chat-box');
     const chatCloseBtn = document.getElementById('chat-close-btn');
     const minimizeBtn = document.getElementById('chat-minimize-btn');
-    const clearBtn = document.getElementById('chat-clear-btn'); // <--- NEW
+    const clearBtn = document.getElementById('chat-clear-btn');
     const sendBtn = document.getElementById('send-btn');
     const userInput = document.getElementById('user-input');
     const chatMessages = document.getElementById('chat-messages');
@@ -69,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- A. LOAD STATE ON PAGE LOAD ---
-    // 1. Load UI State
     const savedState = localStorage.getItem('chatState');
 
     if (savedState === 'open') {
@@ -78,22 +59,18 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (savedState === 'minimized') {
         chatBox.classList.remove('hidden');
         chatBox.classList.add('minimized');
-        if(minimizeBtn) minimizeBtn.querySelector('i').classList.replace('fa-minus', 'fa-plus');
     } else {
         chatBox.classList.add('hidden');
     }
 
-    // 2. Load Message History OR Create Welcome Message
     const savedHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
 
     if (savedHistory.length > 0) {
-        // History exists: Load it
         chatMessages.innerHTML = '';
         savedHistory.forEach(msg => {
             addMessageToUI(msg.text, msg.type);
         });
     } else {
-        // No History: Create Dynamic Welcome Message
         resetChat();
     }
 
@@ -116,13 +93,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- C. EVENT LISTENERS ---
-
     if (chatToggleBtn) {
         chatToggleBtn.addEventListener('click', () => {
-            chatBox.classList.remove('hidden');
-            chatBox.classList.remove('minimized');
-            saveChatState('open');
-            if(minimizeBtn) minimizeBtn.querySelector('i').classList.replace('fa-plus', 'fa-minus');
+            chatBox.classList.toggle('hidden');
+            if (chatBox.classList.contains('hidden')) {
+                saveChatState('hidden');
+            } else {
+                chatBox.classList.remove('minimized');
+                saveChatState('open');
+                if (window.innerWidth > 768 && userInput) {
+                    setTimeout(() => userInput.focus(), 100);
+                }
+            }
         });
     }
 
@@ -136,29 +118,40 @@ document.addEventListener('DOMContentLoaded', () => {
     if (minimizeBtn) {
         minimizeBtn.addEventListener('click', () => {
             chatBox.classList.toggle('minimized');
-            const icon = minimizeBtn.querySelector('i');
-            if (chatBox.classList.contains('minimized')) {
-                icon.classList.replace('fa-minus', 'fa-plus');
-                saveChatState('minimized');
-            } else {
-                icon.classList.replace('fa-plus', 'fa-minus');
-                saveChatState('open');
-            }
+            saveChatState(chatBox.classList.contains('minimized') ? 'minimized' : 'open');
         });
     }
 
-    // NEW: CLEAR BUTTON LOGIC
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
-            // 1. Wipe Storage
             localStorage.removeItem('chatHistory');
-            // 2. Wipe UI
             chatMessages.innerHTML = '';
-            // 3. Reset with Greeting
             resetChat();
         });
     }
 
+    // --- D. TYPING INDICATOR LOGIC ---
+    function showTypingIndicator() {
+        const typingContainer = document.createElement('div');
+        typingContainer.id = 'elia-typing';
+        typingContainer.classList.add('message-container', 'bot-container');
+
+        typingContainer.innerHTML = `
+            <img src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png" class="chat-avatar" alt="Elia">
+            <div class="message bot-message typing-dots">
+                <span></span><span></span><span></span>
+            </div>
+        `;
+        chatMessages.appendChild(typingContainer);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+        const indicator = document.getElementById('elia-typing');
+        if (indicator) indicator.remove();
+    }
+
+    // --- E. SENDING MESSAGES ---
     function sendMessage() {
         const message = userInput.value.trim();
         if (message === "") return;
@@ -167,6 +160,9 @@ document.addEventListener('DOMContentLoaded', () => {
         saveMessageHistory(message, 'user-message');
         userInput.value = '';
 
+        // Show typing indicator while waiting for response
+        showTypingIndicator();
+
         fetch('/get_response', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -174,11 +170,13 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => response.json())
         .then(data => {
+            removeTypingIndicator();
             addMessageToUI(data.response, 'bot-message');
             saveMessageHistory(data.response, 'bot-message');
         })
         .catch(error => {
             console.error('Error:', error);
+            removeTypingIndicator();
             const errorMsg = "Sorry, connection error.";
             addMessageToUI(errorMsg, 'bot-message');
             saveMessageHistory(errorMsg, 'bot-message');
@@ -186,10 +184,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function addMessageToUI(text, className) {
-        const div = document.createElement('div');
-        div.classList.add('message', className);
-        div.textContent = text;
-        chatMessages.appendChild(div);
+        const messageContainer = document.createElement('div');
+        messageContainer.classList.add('message-container');
+
+        if (className === 'bot-message') {
+            messageContainer.classList.add('bot-container');
+            const avatarImg = document.createElement('img');
+            // Lady avatar URL
+            avatarImg.src = 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png';
+            avatarImg.alt = 'Elia Avatar';
+            avatarImg.classList.add('chat-avatar');
+            messageContainer.appendChild(avatarImg);
+        } else {
+            messageContainer.classList.add('user-container');
+        }
+
+        const messageBubble = document.createElement('div');
+        messageBubble.classList.add('message', className);
+        messageBubble.textContent = text;
+
+        messageContainer.appendChild(messageBubble);
+        chatMessages.appendChild(messageContainer);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 

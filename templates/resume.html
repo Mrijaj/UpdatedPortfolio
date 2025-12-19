@@ -1,161 +1,168 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="resume-container" style="max-width: 1100px; margin: 40px auto; padding: 0 20px;">
 
-    <section class="hero" style="padding: 20px 20px; min-height: auto; text-align: center;">
-        <h1 style="margin: 0; font-size: 2rem;">My Resume</h1>
-        <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 1rem;">
-            System Analyst @ HPE | Python Developer | DevOps Enthusiast
-        </p>
-    </section>
-
-    <div class="resume-container">
-
-        <aside class="resume-sidebar">
-
-            <div class="card" style="width: 100%; margin-bottom: 30px; text-align: center; padding: 20px;">
-                <div style="
-                    width: 140px;
-                    height: 140px;
-                    margin: 0 auto 15px auto;
-                    border-radius: 50%;
-                    border: 4px solid var(--primary-color);
-                    overflow: hidden;">
-
-                    <img src="{{ url_for('static', filename='images/Ijaj_hussain_.jpg') }}"
-                         alt="Ijaj Hussain"
-                         style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <h3 style="font-size: 1.4rem; margin-bottom: 5px;">Ijaj Hussain</h3>
-                <p style="color: gray; font-size: 0.9rem;">Pune, India</p>
-
-                <div style="margin-top: 10px; font-size: 1.2rem;">
-                    <a href="https://www.linkedin.com/in/ijaj-hussain-b417b916b/" target="_blank" style="margin: 0 5px; color: #0077b5;"><i class="fab fa-linkedin"></i></a>
-                    <a href="https://github.com/Mrijaj" target="_blank" style="margin: 0 5px; color: var(--text-color);"><i class="fab fa-github"></i></a>
-                </div>
+    <header style="border-bottom: 2px solid var(--border-color); padding-bottom: 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px;">
+        <div>
+            <h1 style="font-size: 3.5rem; margin: 0; line-height: 1;">Resume</h1>
+            <p style="color: var(--primary-color); font-weight: bold; margin-top: 15px; font-size: 1.2rem; line-height: 1.4;">
+                System Analyst @ HPE | Python Developer | DevOps Enthusiast
+            </p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px; color: gray; font-size: 0.95rem; text-align: right; min-width: 220px;">
+            <div style="display: flex; align-items: center; gap: 10px; justify-content: flex-end;">
+                <span>Pune, India</span>
+                <i class="fas fa-map-marker-alt" style="color: var(--primary-color); width: 16px;"></i>
             </div>
-
-            <div class="card" style="width: 100%; margin-bottom: 30px;">
-                <h3 class="resume-heading"><i class="fas fa-tools"></i> Technical Skills</h3>
-
-                <p><strong>Languages:</strong><br> Python, SQL</p>
-                <hr style="margin: 10px 0; border: 0; border-top: 1px solid var(--border-color);">
-
-                <p><strong>Web Dev:</strong><br> Flask, HTML, CSS, REST APIs</p>
-                <hr style="margin: 10px 0; border: 0; border-top: 1px solid var(--border-color);">
-
-                <p><strong>Data Analysis:</strong><br> NumPy, Pandas, Matplotlib</p>
-                <hr style="margin: 10px 0; border: 0; border-top: 1px solid var(--border-color);">
-
-                <p><strong>Tools & DevOps:</strong><br> Git/GitHub, Linux (CLI), VS Code, Docker (Basics)</p>
-                <hr style="margin: 10px 0; border: 0; border-top: 1px solid var(--border-color);">
-
-                <p><strong>Soft Skills:</strong><br> Problem-solving, Analytical thinking, Teamwork</p>
+            <div style="display: flex; align-items: center; gap: 10px; justify-content: flex-end;">
+                <a href="mailto:ijajhussain6202@gmail.com" style="color: gray; text-decoration: none;">ijajhussain6202@gmail.com</a>
+                <i class="fas fa-envelope" style="color: var(--primary-color); width: 16px;"></i>
             </div>
+        </div>
+    </header>
 
-            <div class="card" style="width: 100%; margin-bottom: 30px;">
-                <h3 class="resume-heading"><i class="fas fa-graduation-cap"></i> Education</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 50px; margin-bottom: 60px;">
 
-                <div style="margin-bottom: 15px;">
-                    <h4 style="color: var(--text-color);">B.Tech in Computer Eng.</h4>
-                    <p style="font-size: 0.9rem; font-weight: bold; margin-top: 5px;">
-                        <a href="https://ghrcemp.raisoni.net/computer-engineering" target="_blank" rel="noopener noreferrer"
-                           style="color: var(--primary-color); text-decoration: none;">
-                            G.H Raisoni College of Engineering <i class="fas fa-external-link-alt" style="font-size: 0.8rem;"></i>
-                        </a>
-                    </p>
-                    <small style="color: gray;">2019 - 2023</small>
+        <section>
+            <h2 style="border-bottom: 3px solid var(--primary-color); display: inline-block; padding-bottom: 5px; margin-bottom: 30px; font-size: 1.8rem;">
+                Education
+            </h2>
+            <div style="border-left: 2px solid var(--border-color); padding-left: 25px; position: relative;">
+                <div style="margin-bottom: 40px; position: relative;">
+                    <div style="position: absolute; left: -31px; top: 0; width: 10px; height: 10px; background: var(--primary-color); border-radius: 50%; border: 4px solid var(--bg-color);"></div>
+                    <span style="background: var(--nav-bg); border: 1px solid var(--primary-color); color: var(--primary-color); padding: 2px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">2019 - 2023</span>
+                    <h4 style="margin: 15px 0 5px 0; font-size: 1.2rem;">B.Tech in Computer Engineering</h4>
+                    <p style="color: gray; font-size: 0.95rem;">G.H Raisoni College of Engineering</p>
                 </div>
-
-                <div>
-                    <h4 style="color: var(--text-color);">H.S.C (Science)</h4>
-                    <p style="font-size: 0.9rem; font-weight: bold; margin-top: 5px;">
-                        <a href="https://dayanandpublicschool.edu.in/" target="_blank" rel="noopener noreferrer"
-                           style="color: var(--primary-color); text-decoration: none;">
-                            Dayanand Public School <i class="fas fa-external-link-alt" style="font-size: 0.8rem;"></i>
-                        </a>
-                    </p>
-                    <small style="color: gray;">2017 - 2019</small>
+                <div style="position: relative;">
+                    <div style="position: absolute; left: -31px; top: 0; width: 10px; height: 10px; background: var(--primary-color); border-radius: 50%; border: 4px solid var(--bg-color);"></div>
+                    <span style="background: var(--nav-bg); border: 1px solid var(--primary-color); color: var(--primary-color); padding: 2px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">2017 - 2019</span>
+                    <h4 style="margin: 15px 0 5px 0; font-size: 1.2rem;">H.S.C (Science)</h4>
+                    <p style="color: gray; font-size: 0.95rem;">Dayanand Public School</p>
                 </div>
             </div>
+        </section>
 
-            <div class="card" style="width: 100%;">
-                <h3 class="resume-heading"><i class="fas fa-certificate"></i> Certificates</h3>
-                <ul style="padding-left: 20px; line-height: 1.6;">
-                    <li>Python Developer (Udemy)</li>
-                    <li>Python Automation Project (Great Learning)</li>
-                </ul>
-            </div>
-
-        </aside>
-
-        <main class="resume-main">
-
-            <div class="card" style="width: 100%; margin-bottom: 30px;">
-                <h3 class="resume-heading"><i class="fas fa-user"></i> Profile Summary</h3>
-                <p>Enthusiastic Python developer with hands-on experience in automation, Flask web development, and data analysis. Skilled in Linux operations and building efficient, user-friendly solutions. Adept at problem-solving and collaborating in cross-functional teams.</p>
-            </div>
-
-            <div class="card" style="width: 100%; margin-bottom: 30px;">
-                <h3 class="resume-heading"><i class="fas fa-briefcase"></i> Work Experience</h3>
-
-                <div style="margin-bottom: 25px;">
-                    <h4 style="font-size: 1.2rem;">System Analyst</h4>
-                    <span style="font-weight: bold;">
-                        <a href="https://www.hpe.com/in/en/home.html" target="_blank" rel="noopener noreferrer"
-                           style="color: var(--primary-color); text-decoration: none;">
-                            Hewlett Packard Enterprise (HPE) <i class="fas fa-external-link-alt" style="font-size: 0.8rem;"></i>
-                        </a>
-                    </span>
-                    <br><small style="color: gray;">Dec 2023 – Present</small>
-                    <ul style="padding-left: 20px; margin-top: 10px; line-height: 1.6;">
-                        <li>Provided technical support for HPE products, enhancing customer satisfaction.</li>
-                        <li>Utilized <strong>DevOps (CI/CD)</strong> principles to improve automation.</li>
-                        <li>Leveraged <strong>Linux skills</strong> for troubleshooting and system optimization.</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 style="font-size: 1.2rem;">Web Development Intern</h4>
-                    <span style="font-weight: bold;">
-                        <a href="https://www.skillvertex.com/" target="_blank" rel="noopener noreferrer"
-                           style="color: var(--primary-color); text-decoration: none;">
-                            Skill Vertex Pvt Ltd <i class="fas fa-external-link-alt" style="font-size: 0.8rem;"></i>
-                        </a>
-                    </span>
-                    <ul style="padding-left: 20px; margin-top: 10px; line-height: 1.6;">
-                        <li>Gained hands-on experience in software development lifecycles and web technologies.</li>
+        <section>
+            <h2 style="border-bottom: 3px solid var(--primary-color); display: inline-block; padding-bottom: 5px; margin-bottom: 30px; font-size: 1.8rem;">
+                Experience
+            </h2>
+            <div style="border-left: 2px solid var(--border-color); padding-left: 25px; position: relative;">
+                <div style="margin-bottom: 40px; position: relative;">
+                    <div style="position: absolute; left: -31px; top: 0; width: 10px; height: 10px; background: var(--primary-color); border-radius: 50%; border: 4px solid var(--bg-color);"></div>
+                    <span style="background: var(--primary-color); color: white; padding: 2px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">Dec 2023 - Present</span>
+                    <h4 style="margin: 15px 0 5px 0; font-size: 1.2rem;">System Analyst</h4>
+                    <p style="color: var(--primary-color); font-weight: bold; font-size: 0.95rem; margin-bottom: 10px;">Hewlett Packard Enterprise (HPE)</p>
+                    <ul style="font-size: 0.9rem; line-height: 1.6; color: gray; padding-left: 15px;">
+                        <li><strong>Technical Troubleshooting:</strong> Delivering high-tier technical support for HPE products, utilizing Linux CLI for deep-dive log analysis and diagnostics.</li>
+                        <li><strong>Python Automation:</strong> Developed custom scripts to automate routine system health checks, reducing manual intervention by 40%.</li>
+                        <li><strong>DevOps Integration:</strong> Applied CI/CD principles and automated logging into incident management workflows for optimized support response.</li>
                     </ul>
                 </div>
             </div>
-
-            <div class="card" style="width: 100%; margin-bottom: 30px;">
-                <h3 class="resume-heading"><i class="fas fa-code"></i> Key Projects</h3>
-
-                <h4 style="font-size: 1.2rem;">
-                    <a href="https://github.com/Mrijaj/Blog-Website" target="_blank" rel="noopener noreferrer"
-                       style="color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 8px;">
-                        Flask Web Application (Automation & CRUD)
-                        <i class="fab fa-github"></i>
-                    </a>
-                </h4>
-
-                <small style="color: gray;">2024 - 2025</small>
-                <p style="margin-top: 10px;">Developed a dynamic web app to demonstrate CRUD operations and workflow automation.</p>
-                <ul style="padding-left: 20px; margin-top: 10px; line-height: 1.6;">
-                    <li><strong>Backend:</strong> Built with Flask, SQLite, and Jinja2 templates.</li>
-                    <li><strong>Features:</strong> Implemented form validation, REST API endpoints, and error logging.</li>
-                    <li><strong>Outcome:</strong> Automated routine tasks using Python scripts.</li>
-                </ul>
-            </div>
-
-            <div style="margin-top: 10px;">
-                <a href="{{ url_for('static', filename='resume.pdf') }}" download="Ijaj_Hussain_Resume.pdf" class="btn-submit" style="text-align: center; display: block; text-decoration: none; padding: 15px;">
-                    <i class="fas fa-file-download"></i> Download Full Resume (PDF)
-                </a>
-            </div>
-
-        </main>
+        </section>
     </div>
 
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 50px; margin-bottom: 60px;">
+
+        <section>
+            <h2 style="border-bottom: 3px solid var(--primary-color); display: inline-block; padding-bottom: 5px; margin-bottom: 30px; font-size: 1.8rem;">
+                Technical Skills
+            </h2>
+            {% set skills = [
+                ('Python (Automation & Logic)', 95),
+                ('SQL (Database Management)', 85),
+                ('Linux / CLI (Diagnostics)', 90),
+                ('Data Analysis (Pandas, NumPy, Matplotlib)', 80),
+                ('Web Dev (Flask, REST APIs)', 80),
+                ('Git & DevOps', 75)
+            ] %}
+            {% for skill, percent in skills %}
+            <div style="margin-bottom: 25px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-weight: bold; font-size: 0.9rem;">{{ skill }}</span>
+                    <span style="font-size: 0.8rem; color: gray;">{{ percent }}%</span>
+                </div>
+                <div style="background: var(--border-color); height: 8px; border-radius: 4px; overflow: hidden;">
+                    <div style="background: var(--primary-color); width: {{ percent }}%; height: 100%; border-radius: 4px;"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+
+        <section>
+            <h2 style="border-bottom: 3px solid var(--primary-color); display: inline-block; padding-bottom: 5px; margin-bottom: 30px; font-size: 1.8rem;">
+                Certificates & Learning
+            </h2>
+            <div style="display: grid; gap: 20px;">
+                <div class="card" style="display: flex; align-items: center; padding: 20px; gap: 20px; border-left: 5px solid var(--primary-color);">
+                    <div style="background: rgba(37, 99, 235, 0.1); padding: 10px; border-radius: 8px;">
+                        <i class="fas fa-certificate" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0; font-size: 1rem;">Python Developer</h4>
+                        <p style="color: gray; font-size: 0.8rem; margin: 3px 0 0 0;">Udemy</p>
+                    </div>
+                </div>
+                <div class="card" style="display: flex; align-items: center; padding: 20px; gap: 20px; border-left: 5px solid var(--primary-color);">
+                    <div style="background: rgba(37, 99, 235, 0.1); padding: 10px; border-radius: 8px;">
+                        <i class="fas fa-brain" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0; font-size: 1rem;">Data Scientist</h4>
+                        <p style="color: gray; font-size: 0.8rem; margin: 3px 0 0 0;">Cognitive Class.ai (IBM)</p>
+                        <small style="color: var(--primary-color); font-weight: bold; font-size: 0.75rem;">Active Learner</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section style="margin-bottom: 60px;">
+        <h2 style="border-bottom: 3px solid var(--primary-color); display: inline-block; padding-bottom: 5px; margin-bottom: 30px; font-size: 1.8rem;">
+            Key Projects
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px;">
+
+            <div class="card" style="padding: 25px; border-left: 5px solid var(--primary-color); display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+                    <h4 style="margin: 0; font-size: 1.3rem;">Personal Portfolio Website</h4>
+                    <a href="https://github.com/Mrijaj/UpdatedPortfolio" target="_blank" style="color: var(--primary-color); text-decoration: none; font-size: 0.85rem; font-weight: bold;">
+                        View Project <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <p style="color: gray; margin-top: 10px; font-size: 0.9rem;">Professional portfolio featuring dark mode, AI assistant integration, and a modular resume structure.</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0;">
+                    <span style="background: rgba(37,99,235,0.1); color: var(--primary-color); font-size: 0.75rem; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--primary-color);">Flask</span>
+                    <span style="background: rgba(37,99,235,0.1); color: var(--primary-color); font-size: 0.75rem; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--primary-color);">Python</span>
+                    <span style="background: rgba(37,99,235,0.1); color: var(--primary-color); font-size: 0.75rem; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--primary-color);">JavaScript</span>
+                    <span style="background: rgba(37,99,235,0.1); color: var(--primary-color); font-size: 0.75rem; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--primary-color);">CSS3</span>
+                </div>
+            </div>
+
+            <div class="card" style="padding: 25px; border-left: 5px solid var(--primary-color); display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+                    <h4 style="margin: 0; font-size: 1.3rem;">Personal Blog Website</h4>
+                    <a href="https://github.com/Mrijaj/Blog-Website" target="_blank" style="color: var(--primary-color); text-decoration: none; font-size: 0.85rem; font-weight: bold;">
+                        View Project <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <p style="color: gray; margin-top: 10px; font-size: 0.9rem;">Feature-rich blog with user authentication, comment systems, and SQLite database management.</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0;">
+                    <span style="background: rgba(37,99,235,0.1); color: var(--primary-color); font-size: 0.75rem; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--primary-color);">Flask</span>
+                    <span style="background: rgba(37,99,235,0.1); color: var(--primary-color); font-size: 0.75rem; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--primary-color);">SQLite</span>
+                    <span style="background: rgba(37,99,235,0.1); color: var(--primary-color); font-size: 0.75rem; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--primary-color);">REST API</span>
+                    <span style="background: rgba(37,99,235,0.1); color: var(--primary-color); font-size: 0.75rem; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--primary-color);">HTML/CSS</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div style="margin-top: 80px; text-align: center;">
+        <a href="{{ url_for('static', filename='resume.pdf') }}" download class="btn-submit" style="display: inline-block; width: auto; padding: 18px 50px; text-decoration: none; border-radius: 50px; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);">
+            <i class="fas fa-file-download" style="margin-right: 10px;"></i> Download Full Resume (PDF)
+        </a>
+    </div>
+</div>
 {% endblock %}
