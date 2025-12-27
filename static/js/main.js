@@ -42,6 +42,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('user-input');
     const chatMessages = document.getElementById('chat-messages');
 
+    // --- ELIA AUTO-POPUP LOGIC ---
+    const eliaPopup = document.getElementById('elia-popup');
+
+    if (window.location.pathname === "/" || window.location.pathname.includes("home")) {
+        setTimeout(() => {
+            if (eliaPopup && chatBox.classList.contains('hidden')) {
+                eliaPopup.classList.remove('hidden');
+
+                setTimeout(() => {
+                    if (eliaPopup) {
+                        eliaPopup.style.opacity = '0';
+                        setTimeout(() => eliaPopup.remove(), 500);
+                    }
+                }, 5000);
+            }
+        }, 2000);
+    }
+
     // --- HELPER: GET TIME GREETING ---
     function getTimeBasedGreeting() {
         const hour = new Date().getHours();
@@ -68,7 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedHistory.length > 0) {
         chatMessages.innerHTML = '';
         savedHistory.forEach(msg => {
-            addMessageToUI(msg.text, msg.type);
+            // History is loaded instantly without typewriter for better UX
+            addMessageToUI(msg.text, msg.type, true);
         });
     } else {
         resetChat();
@@ -95,6 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- C. EVENT LISTENERS ---
     if (chatToggleBtn) {
         chatToggleBtn.addEventListener('click', () => {
+            if (eliaPopup) eliaPopup.remove();
+
             chatBox.classList.toggle('hidden');
             if (chatBox.classList.contains('hidden')) {
                 saveChatState('hidden');
@@ -160,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
         saveMessageHistory(message, 'user-message');
         userInput.value = '';
 
-        // Show typing indicator while waiting for response
         showTypingIndicator();
 
         fetch('/get_response', {
@@ -183,14 +203,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function addMessageToUI(text, className) {
+    // --- F. TYPEWRITER EFFECT HELPER ---
+    function typeWriter(text, element, speed = 25) {
+        let i = 0;
+        element.textContent = "";
+        function type() {
+            if (i < text.length) {
+                element.textContent += text.charAt(i);
+                i++;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                setTimeout(type, speed);
+            }
+        }
+        type();
+    }
+
+    function addMessageToUI(text, className, isHistory = false) {
         const messageContainer = document.createElement('div');
         messageContainer.classList.add('message-container');
 
         if (className === 'bot-message') {
             messageContainer.classList.add('bot-container');
             const avatarImg = document.createElement('img');
-            // Lady avatar URL
             avatarImg.src = 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png';
             avatarImg.alt = 'Elia Avatar';
             avatarImg.classList.add('chat-avatar');
@@ -201,10 +235,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const messageBubble = document.createElement('div');
         messageBubble.classList.add('message', className);
-        messageBubble.textContent = text;
 
         messageContainer.appendChild(messageBubble);
         chatMessages.appendChild(messageContainer);
+
+        // Apply typewriter only for new Bot messages (not user or history)
+        if (className === 'bot-message' && !isHistory) {
+            typeWriter(text, messageBubble);
+        } else {
+            messageBubble.textContent = text;
+        }
+
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
