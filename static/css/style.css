@@ -144,8 +144,26 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 }
 
 /* ===========================
-   5. SECTIONS
+   5. SECTIONS & BLOG LAYOUT
    =========================== */
+.blog-main-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
+
+.blog-posts-column {
+    flex: 2;
+    order: 1;
+}
+
+.blog-sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    order: 2;
+}
+
 .hero { background-color: var(--primary-color); color: white; text-align: center; padding-top: 50px; padding-bottom: 50px; }
 .hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
 .hero p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 20px; }
@@ -167,7 +185,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 .social-links { display: flex; gap: 20px; }
 
 /* ===========================
-   6. UPDATED CHATBOT UI
+   6. CHATBOT UI
    =========================== */
 #chat-widget { position: fixed !important; bottom: 20px !important; right: 20px !important; z-index: 2147483647 !important; }
 
@@ -199,19 +217,16 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     background-color: var(--bg-color);
 }
 
-/* Avatar + Bubble Container */
 .message-container { display: flex; align-items: flex-start; width: 100%; }
 .bot-container { justify-content: flex-start; }
 .user-container { justify-content: flex-end; }
 
-/* Elia Lady Avatar Styling */
 .chat-avatar {
     width: 35px; height: 35px; border-radius: 50%;
     margin-right: 10px; border: 2px solid var(--primary-color);
     background-color: white; flex-shrink: 0; object-fit: cover; padding: 2px;
 }
 
-/* Message Bubble Styling */
 .message {
     padding: 10px 14px; border-radius: 18px;
     max-width: 80%; word-wrap: break-word; font-size: 0.9rem; line-height: 1.4;
@@ -227,7 +242,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     border-bottom-right-radius: 4px;
 }
 
-/* Typing Dots Animation */
 .typing-dots { display: flex; align-items: center; gap: 4px; padding: 12px 20px !important; }
 .typing-dots span {
     width: 8px; height: 8px; background-color: var(--primary-color);
@@ -246,7 +260,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 #user-input { flex: 1; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; outline: none; background: var(--bg-color); color: var(--text-color); }
 #send-btn { background: none; border: none; color: var(--primary-color); font-size: 18px; margin-left: 10px; cursor: pointer; }
 
-/* Spaced Header Icons */
 #chat-minimize-btn, #chat-close-btn, #chat-clear-btn {
     background: none; border: none; color: white; cursor: pointer;
     margin-left: 20px !important; padding: 5px !important; font-size: 16px !important;
@@ -254,7 +267,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 .chat-box.minimized { height: 60px !important; overflow: hidden; }
 
 /* ===========================
-   8. ELIA AUTO-POPUP STYLING
+   7. ELIA AUTO-POPUP STYLING
    =========================== */
 #elia-popup {
     position: absolute;
@@ -289,7 +302,46 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 }
 
 /* ========================================================
-   9. FINAL FORCE FIXES (CONTACT FORM VISIBILITY)
+   8. MOBILE BLOG REORDERING (Search Top, Subscribe Bottom)
+   ======================================================== */
+@media (max-width: 768px) {
+    .blog-main-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .blog-sidebar {
+        display: contents; /* Allows reordering children globally */
+    }
+
+    /* 1. Search is absolute TOP */
+    .search-card {
+        order: -2 !important;
+        margin-bottom: 20px;
+    }
+
+    /* 2. Blog Posts follow Search */
+    .blog-posts-column {
+        order: 1 !important;
+    }
+
+    /* 3. Categories follow Posts */
+    .categories-card {
+        order: 2 !important;
+        margin-bottom: 20px;
+    }
+
+    /* 4. Subscribe is absolute BOTTOM */
+    .subscribe-card {
+        order: 3 !important;
+        margin-bottom: 40px;
+    }
+
+    .chat-box { width: 90vw !important; right: 5vw !important; bottom: 90px !important; height: 50vh !important; }
+}
+
+/* ========================================================
+   9. CONTACT FORM & THEME FIXES
    ======================================================== */
 .contact-section { max-width: 600px; margin: 40px auto; padding: 0 20px; }
 .contact-form { padding: 40px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); }
@@ -310,8 +362,4 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 body.dark-mode .form-control {
     background-color: #2d2d2d !important; color: #ffffff !important;
     border-color: #444; -webkit-text-fill-color: #ffffff !important;
-}
-
-@media (max-width: 768px) {
-    .chat-box { width: 90vw !important; right: 5vw !important; bottom: 90px !important; height: 50vh !important; }
 }
