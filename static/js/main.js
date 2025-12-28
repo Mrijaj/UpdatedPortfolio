@@ -41,10 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendBtn = document.getElementById('send-btn');
     const userInput = document.getElementById('user-input');
     const chatMessages = document.getElementById('chat-messages');
-
-    // --- ELIA AUTO-POPUP LOGIC ---
     const eliaPopup = document.getElementById('elia-popup');
 
+    // --- ELIA AUTO-POPUP LOGIC ---
     if (window.location.pathname === "/" || window.location.pathname.includes("home")) {
         setTimeout(() => {
             if (eliaPopup && chatBox.classList.contains('hidden')) {
@@ -68,9 +67,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return "Good Evening";
     }
 
-    // --- A. LOAD STATE ON PAGE LOAD ---
-    const savedState = localStorage.getItem('chatState');
+    // --- A. SESSION INITIALIZATION (FRESH START) ---
+    // Clears history every time the page is loaded to ensure a fresh session
+    localStorage.removeItem('chatHistory');
+    chatMessages.innerHTML = '';
 
+    // Maintain toggle state (Open/Minimized) but start with a fresh welcome
+    const savedState = localStorage.getItem('chatState');
     if (savedState === 'open') {
         chatBox.classList.remove('hidden');
         chatBox.classList.remove('minimized');
@@ -81,17 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
         chatBox.classList.add('hidden');
     }
 
-    const savedHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
-
-    if (savedHistory.length > 0) {
-        chatMessages.innerHTML = '';
-        savedHistory.forEach(msg => {
-            // History is loaded instantly without typewriter for better UX
-            addMessageToUI(msg.text, msg.type, true);
-        });
-    } else {
-        resetChat();
-    }
+    // Always trigger a fresh welcome message
+    resetChat();
 
     // --- B. SAVE HELPERS ---
     function saveChatState(state) {
@@ -239,7 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
         messageContainer.appendChild(messageBubble);
         chatMessages.appendChild(messageContainer);
 
-        // Apply typewriter only for new Bot messages (not user or history)
         if (className === 'bot-message' && !isHistory) {
             typeWriter(text, messageBubble);
         } else {

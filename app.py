@@ -1,144 +1,156 @@
-from flask import Flask, render_template, abort, request, jsonify, session, redirect, url_for, flash
-import json
-import random
-import string
 import os
+import ssl
+import certifi
+import httpx
+from flask import (
+    Flask, render_template, request, jsonify,
+    session, redirect, url_for, flash
+)
+from dotenv import load_dotenv
+from groq import Groq
 
+# ==========================================
+# 1. THE "MONKEY PATCH" (BYPASS HPE PROXY)
+# ==========================================
+original_client_init = httpx.Client.__init__
+def patched_client_init(self, *args, **kwargs):
+    kwargs['verify'] = False
+    original_client_init(self, *args, **kwargs)
+httpx.Client.__init__ = patched_client_init
+
+try:
+    ssl._create_default_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+
+os.environ["SSL_CERT_FILE"] = certifi.where()
+load_dotenv()
+
+# ==========================================
+# 2. FLASK & GROQ CONFIG
+# ==========================================
 app = Flask(__name__)
-app.secret_key = "my_super_secret_key_change_this"
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev_fallback_secret")
 
-# 1. UPDATED DATA (Added 'category' field)
-POSTS = [
-    {
-        'id': 1,
-        'title': 'Starting My Web Development Journey',
-        'date': 'December 16, 2025',
-        'category': 'Web Dev',  # <--- NEW
-        'content': 'Today I started building my portfolio using Flask...'
-    },
-    {
-        'id': 2,
-        'title': 'Why I Chose Python',
-        'date': 'December 12, 2025',
-        'category': 'Python',  # <--- NEW
-        'content': 'Python is known for its readability and vast ecosystem...'
-    }
-]
+GROQ_KEY = os.getenv("GROQ_API_KEY")
+MY_PHONE = os.getenv("MY_PHONE", "6202736628")
 
+client = Groq(api_key=GROQ_KEY)
 
-# ... (Routes for home, about, resume remain the same) ...
-@app.route('/')
-def home(): return render_template('home.html', title="Home")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+SUBSCRIBERS_FILE = os.path.join(BASE_DIR, "subscribers.txt")
 
+# ==========================================
+# 3. ELIA'S REFINED KNOWLEDGE BASE
+# ==========================================
+SYSTEM_INSTRUCTIONS = (
+    "You are Elia, the professional AI assistant for Ijaj Hussain. "
+    "Your goal is to provide direct and helpful answers based on the following facts: "
 
-@app.route('/about')
-def about(): return render_template('about.html', title="About Me")
+    f"--- KNOWLEDGE --- "
+    f"Owner: Ijaj Hussain (26 years old). "
+    f"Current Role: System Analyst at Hewlett Packard Enterprise (HPE). "
+    f"Experience: 2 years in Tech Support, Automation, and System Analysis. "
+    f"Location: Pune, India (Hometown: Jamshedpur). "
+    f"Education: B.Tech in Computer Engineering from G.H Raisoni College (2023). "
+    f"High School: H.S.C from Dayanand Public School (2019). "
+    f"Skills: Python, Flask, SQL, ETL Pipelines, Data Analysis, and DBA. "
+    f"Projects: Portfolio Site, CRUD Blog App, and Python Automation. "
+    f"Hobbies: Cricket, Astronomy, and 'vibe coding'. "
+    f"Contact: Email: ijajhussain6202@gmail.com, Phone: {MY_PHONE}. "
 
+    "--- RULES --- "
+    "1. ANSWER THE QUESTION DIRECTLY. Do not start every response with 'I am Elia'. "
+    "2. Only introduce yourself as Elia if the user specifically asks 'Who are you?' or greets you for the first time. "
+    "3. Keep responses professional, friendly, and concise. "
+    "4. If asked for a resume, direct them to the 'Resume' page. "
+    "5. Do not repeat your introduction once the conversation has started."
+)
 
-@app.route('/resume')
-def resume(): return render_template('resume.html', title="Resume")
+# ==========================================
+# 4. AI CHAT ENDPOINT
+# ==========================================
+@app.route("/get_response", methods=["POST"])
+def get_response():
+    try:
+        data = request.get_json(force=True)
+        user_message = data.get("message", "").strip()
 
+        if not user_message:
+            return jsonify({"response": "I'm listening! How can I help you today?"})
 
-# 2. UPDATED BLOG ROUTE (Handles Filtering)
-@app.route('/blog/')
+        completion = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[
+                {"role": "system", "content": SYSTEM_INSTRUCTIONS},
+                {"role": "user", "content": user_message}
+            ],
+            temperature=0.6,
+            max_tokens=500
+        )
+
+        return jsonify({"response": completion.choices[0].message.content})
+
+    except Exception as e:
+        print(f"❌ Groq API Error: {e}")
+        return jsonify({"response": "⚠️ Elia is reconnecting. Please try again!"})
+
+# ==========================================
+# 5. STANDARD ROUTES
+# ==========================================
+@app.route("/")
+def home(): return render_template("home.html", title="Home")
+
+@app.route("/about")
+def about(): return render_template("about.html", title="About Me")
+
+@app.route("/resume")
+def resume(): return render_template("resume.html", title="Resume")
+
+@app.route("/blog/")
 def blog():
-    # Check if a category was clicked
-    category_filter = request.args.get('category')
+    posts = [
+        {"id": 1, "title": "My Path to System Analyst", "category": "Career"},
+        {"id": 2, "title": "Flask and AI Integration", "category": "Web Dev"}
+    ]
+    return render_template("blog.html", posts=posts, title="Blog")
 
-    if category_filter:
-        # Filter the posts list
-        filtered_posts = [p for p in POSTS if p.get('category') == category_filter]
-    else:
-        # Show all posts
-        filtered_posts = POSTS
+@app.route("/contact")
+def contact(): return render_template("contact.html", title="Contact")
 
-    return render_template('blog.html', posts=filtered_posts)
-
-
-# ... (Keep all your other routes: articles, contact, subscribe, admin, chat) ...
-# (I am abbreviating here to save space, but keep the rest of your app.py the same!)
-
-@app.route('/article/how-i-built-this')
-def article_1(): return render_template('article_1.html', title="How I Built This")
-
-
-@app.route('/article/why-python')
-def article_2(): return render_template('article_2.html', title="Why I Chose Python")
-
-
-@app.route('/post/<int:post_id>')
-def post(post_id):
-    post = next((p for p in POSTS if p['id'] == post_id), None)
-    if post is None: abort(404)
-    return render_template('post_detail.html', post=post)
-
-
-@app.route('/contact')
-def contact(): return render_template('contact.html', title="Contact")
-
-
-@app.route('/thank-you')
-def thank_you(): return render_template('thankyou.html', title="Message Sent")
-
-
-@app.route('/subscribe', methods=['POST'])
+# ==========================================
+# 6. SUBSCRIBE & ADMIN
+# ==========================================
+@app.route("/subscribe", methods=["POST"])
 def subscribe():
-    email = request.form.get('email')
-    with open('subscribers.txt', 'a') as file: file.write(f"{email}\n")
-    return render_template('thankyou.html', title="Subscribed!")
+    email = request.form.get("email")
+    if email:
+        with open(SUBSCRIBERS_FILE, "a", encoding="utf-8") as f:
+            f.write(email.strip() + "\n")
+    return render_template("thankyou.html", title="Subscribed")
 
-
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        if username == "admin" and password == "ijaj6202":
-            session['logged_in'] = True
-            return redirect(url_for('view_subscribers'))
-        else:
-            flash("Invalid Username or Password!")
-    return render_template('login.html', title="Admin Login")
+    if request.method == "POST":
+        if request.form["username"] == "admin" and request.form["password"] == "ijaj6202":
+            session["logged_in"] = True
+            return redirect(url_for("view_subscribers"))
+        flash("Invalid credentials!")
+    return render_template("login.html", title="Admin Login")
 
-
-@app.route('/admin/view-subscribers')
+@app.route("/admin/view-subscribers")
 def view_subscribers():
-    if not session.get('logged_in'): return redirect(url_for('login'))
+    if not session.get("logged_in"): return redirect(url_for("login"))
     emails = []
-    if os.path.exists('subscribers.txt'):
-        with open('subscribers.txt', 'r') as file: emails = file.readlines()
-    return render_template('admin.html', emails=emails, title="Admin Panel")
+    if os.path.exists(SUBSCRIBERS_FILE):
+        with open(SUBSCRIBERS_FILE, "r", encoding="utf-8") as f:
+            emails = [e.strip() for e in f if e.strip()]
+    return render_template("admin.html", emails=emails, title="Admin Panel")
 
-
-@app.route('/logout')
+@app.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for('login'))
+    return redirect(url_for("login"))
 
-
-def load_intents():
-    try:
-        with open('intents.json', 'r') as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {"intents": []}
-
-
-@app.route('/get_response', methods=['POST'])
-def get_response():
-    raw_input = request.json.get("message", "").lower()
-    user_input = raw_input.translate(str.maketrans('', '', string.punctuation))
-    user_words = user_input.split()
-    data = load_intents()
-    for intent in data['intents']:
-        for pattern in intent['patterns']:
-            pattern_lower = pattern.lower()
-            if " " not in pattern_lower:
-                if pattern_lower in user_words: return jsonify({"response": random.choice(intent['responses'])})
-            else:
-                if pattern_lower in user_input: return jsonify({"response": random.choice(intent['responses'])})
-    return jsonify({"response": "Sorry, I am trained to answer questions related to this website only."})
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
