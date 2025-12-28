@@ -13,9 +13,13 @@ from groq import Groq
 # 1. THE "MONKEY PATCH" (BYPASS HPE PROXY)
 # ==========================================
 original_client_init = httpx.Client.__init__
+
+
 def patched_client_init(self, *args, **kwargs):
     kwargs['verify'] = False
     original_client_init(self, *args, **kwargs)
+
+
 httpx.Client.__init__ = patched_client_init
 
 try:
@@ -60,6 +64,7 @@ SYSTEM_INSTRUCTIONS = (
     "1. ANSWER THE QUESTION DIRECTLY. 2. Keep responses professional, friendly, and concise."
 )
 
+
 # ==========================================
 # 4. AI CHAT ENDPOINT (UNCHANGED)
 # ==========================================
@@ -85,6 +90,7 @@ def get_response():
         print(f"❌ Groq API Error: {e}")
         return jsonify({"response": "⚠️ Elia is reconnecting. Please try again!"})
 
+
 # ==========================================
 # 5. CONNECTED ROUTES
 # ==========================================
@@ -92,18 +98,28 @@ def get_response():
 def home():
     return render_template("home.html", title="Home")
 
+
 @app.route("/about")
 def about():
     return render_template("about.html", title="About Me")
 
+
 @app.route("/resume")
 def resume():
-    return render_template("resume.html", title="Resume")
+    # External links for your background
+    links = {
+        "college": "https://ghrcem.raisoni.net/",
+        "school": "https://www.dayanandpublicschool.edu.in/",
+        "company": "https://www.hpe.com/"
+    }
+    return render_template("resume.html", title="Resume", links=links)
+
 
 @app.route("/blog/")
 def blog():
-    # FIXED: Data updated to match blog.html requirements (date and content)
-    posts = [
+    # FIXED: Added logic to handle category filtering from the sidebar
+    category = request.args.get('category')
+    all_posts = [
         {
             "id": 1,
             "title": "My Path to System Analyst",
@@ -119,25 +135,39 @@ def blog():
             "content": "Exploring how to combine Flask with the Groq Llama 3 API."
         }
     ]
+
+    if category:
+        posts = [p for p in all_posts if p['category'] == category]
+    else:
+        posts = all_posts
+
     return render_template("blog.html", posts=posts, title="Blog")
+
 
 @app.route("/blog/article-1")
 def article_1():
     return render_template("article_1.html", title="My Path to System Analyst")
 
+
 @app.route("/blog/article-2")
 def article_2():
     return render_template("article_2.html", title="Flask and AI Integration")
+
+
+# Fallback route to match the 'url_for(post, ...)' logic in blog.html
+@app.route("/blog/post/<int:post_id>")
+def post(post_id):
+    return render_template("post_detail.html", post_id=post_id)
+
 
 @app.route("/contact")
 def contact():
     return render_template("contact.html", title="Contact")
 
-# ==========================================
-# 6. SUBSCRIBE & ADMIN (FIXED ENDPOINTS)
-# ==========================================
 
-# This endpoint satisfies url_for('subscribe') in blog.html
+# ==========================================
+# 6. SUBSCRIBE & ADMIN
+# ==========================================
 @app.route("/subscribe", methods=["POST"])
 def subscribe():
     email = request.form.get("email")
@@ -146,10 +176,11 @@ def subscribe():
             f.write(email.strip() + "\n")
     return redirect(url_for('thank_you'))
 
-# This endpoint satisfies url_for('thank_you') in contact.html
+
 @app.route("/thank-you")
 def thank_you():
     return render_template("thankyou.html", title="Subscribed")
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -159,6 +190,7 @@ def login():
             return redirect(url_for("view_subscribers"))
         flash("Invalid credentials!")
     return render_template("login.html", title="Admin Login")
+
 
 @app.route("/admin/view-subscribers")
 def view_subscribers():
@@ -170,10 +202,12 @@ def view_subscribers():
             emails = [e.strip() for e in f if e.strip()]
     return render_template("admin.html", emails=emails, title="Admin Panel")
 
+
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
+
 
 if __name__ == "__main__":
     app.run(debug=True)

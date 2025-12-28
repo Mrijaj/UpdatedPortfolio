@@ -105,7 +105,15 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
         height: auto;
         gap: 10px;
     }
-    .logo { order: 1; flex: 1; width: 100%; display: flex; justify-content: space-between; align-items: center; }
+
+    /* FIXED: Changed to auto width and inline-block to prevent full-width click area */
+    .logo {
+        order: 1;
+        width: auto;
+        display: inline-block;
+        white-space: nowrap;
+    }
+
     #theme-icon { position: absolute; top: 15px; right: 15px; margin: 0; }
 
     .nav-links {
