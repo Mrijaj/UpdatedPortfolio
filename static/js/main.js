@@ -43,6 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatMessages = document.getElementById('chat-messages');
     const eliaPopup = document.getElementById('elia-popup');
 
+    // Track active requests/typing for the "Stop" functionality
+    let eliaAbortController = null;
+
     // --- ELIA AUTO-POPUP LOGIC ---
     if (window.location.pathname === "/" || window.location.pathname.includes("home")) {
         setTimeout(() => {
@@ -67,12 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return "Good Evening";
     }
 
-    // --- A. SESSION INITIALIZATION (FRESH START) ---
-    // Clears history every time the page is loaded to ensure a fresh session
+    // --- A. SESSION INITIALIZATION ---
     localStorage.removeItem('chatHistory');
     chatMessages.innerHTML = '';
 
-    // Maintain toggle state (Open/Minimized) but start with a fresh welcome
     const savedState = localStorage.getItem('chatState');
     if (savedState === 'open') {
         chatBox.classList.remove('hidden');
@@ -84,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
         chatBox.classList.add('hidden');
     }
 
-    // Always trigger a fresh welcome message
     resetChat();
 
     // --- B. SAVE HELPERS ---
@@ -109,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (chatToggleBtn) {
         chatToggleBtn.addEventListener('click', () => {
             if (eliaPopup) eliaPopup.remove();
-
             chatBox.classList.toggle('hidden');
             if (chatBox.classList.contains('hidden')) {
                 saveChatState('hidden');
@@ -168,8 +167,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- E. SENDING MESSAGES ---
     function sendMessage() {
+        const sendIcon = sendBtn.querySelector('i');
+        const headerSpan = document.querySelector('.chat-header span');
+
+        // STOP functionality
+        if (eliaAbortController) {
+            eliaAbortController.abort();
+            eliaAbortController = null;
+            removeTypingIndicator();
+
+            const botMessages = chatMessages.querySelectorAll('.bot-message');
+            const lastMsg = botMessages[botMessages.length - 1];
+
+            if (lastMsg) {
+                lastMsg.classList.add('message-aborted');
+                const badge = document.createElement('div');
+                badge.className = 'stop-badge';
+                badge.innerHTML = '<i class="fas fa-stop-circle"></i> Response stopped';
+                lastMsg.appendChild(badge);
+            }
+
+            finishAiResponse();
+            return;
+        }
+
         const message = userInput.value.trim();
         if (message === "") return;
+
+        userInput.disabled = true;
+
+        if (sendIcon) {
+            sendIcon.classList.remove('fa-paper-plane');
+            sendIcon.classList.add('fa-stop');
+            sendBtn.title = "Stop Response";
+
+            // Trigger Typing status in header
+            if (headerSpan) headerSpan.classList.add('is-typing');
+        }
 
         addMessageToUI(message, 'user-message');
         saveMessageHistory(message, 'user-message');
@@ -177,10 +211,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         showTypingIndicator();
 
+        eliaAbortController = new AbortController();
+
         fetch('/get_response', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: message })
+            body: JSON.stringify({ message: message }),
+            signal: eliaAbortController.signal
         })
         .then(response => response.json())
         .then(data => {
@@ -189,27 +226,62 @@ document.addEventListener('DOMContentLoaded', () => {
             saveMessageHistory(data.response, 'bot-message');
         })
         .catch(error => {
-            console.error('Error:', error);
-            removeTypingIndicator();
-            const errorMsg = "Sorry, connection error.";
-            addMessageToUI(errorMsg, 'bot-message');
-            saveMessageHistory(errorMsg, 'bot-message');
+            if (error.name === 'AbortError') {
+                console.log("Response stopped by user.");
+            } else {
+                console.error('Error:', error);
+                removeTypingIndicator();
+                addMessageToUI("Sorry, connection error.", 'bot-message');
+                finishAiResponse();
+            }
         });
     }
 
-    // --- F. TYPEWRITER EFFECT HELPER ---
+    // --- F. TYPEWRITER EFFECT HELPER (FIXED FOR GREETING) ---
     function typeWriter(text, element, speed = 25) {
         let i = 0;
         element.textContent = "";
+
+        const startedWithController = !!eliaAbortController;
+
         function type() {
+            if (startedWithController && !eliaAbortController) {
+                return;
+            }
+
             if (i < text.length) {
                 element.textContent += text.charAt(i);
                 i++;
                 chatMessages.scrollTop = chatMessages.scrollHeight;
                 setTimeout(type, speed);
+            } else {
+                if (typeof marked !== 'undefined') {
+                    element.innerHTML = marked.parse(text);
+                }
+                finishAiResponse();
             }
         }
         type();
+    }
+
+    function finishAiResponse() {
+        eliaAbortController = null;
+        userInput.disabled = false;
+        sendBtn.disabled = false;
+
+        const sendIcon = sendBtn.querySelector('i');
+        const headerSpan = document.querySelector('.chat-header span');
+
+        if (sendIcon) {
+            sendIcon.classList.remove('fa-stop');
+            sendIcon.classList.add('fa-paper-plane');
+            sendBtn.title = "Send Message";
+        }
+
+        // Remove Typing status from header
+        if (headerSpan) headerSpan.classList.remove('is-typing');
+
+        userInput.focus();
     }
 
     function addMessageToUI(text, className, isHistory = false) {
@@ -236,7 +308,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (className === 'bot-message' && !isHistory) {
             typeWriter(text, messageBubble);
         } else {
-            messageBubble.textContent = text;
+            if (typeof marked !== 'undefined') {
+                messageBubble.innerHTML = marked.parse(text);
+            } else {
+                messageBubble.textContent = text;
+            }
         }
 
         chatMessages.scrollTop = chatMessages.scrollHeight;

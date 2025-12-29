@@ -7,6 +7,8 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
 
@@ -73,7 +75,7 @@
             <div class="popup-arrow"></div>
         </div>
 
-        <button id="chat-toggle-btn">
+        <button id="chat-toggle-btn" title="Chat with Elia">
             <i class="fas fa-comment-dots"></i>
         </button>
 
@@ -97,7 +99,7 @@
 
             <div class="chat-input-area">
                 <input type="text" id="user-input" placeholder="Type a message..." autocomplete="off">
-                <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+                <button id="send-btn" title="Send Message"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
