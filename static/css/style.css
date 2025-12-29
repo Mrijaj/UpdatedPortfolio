@@ -193,7 +193,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 .social-links { display: flex; gap: 20px; }
 
 /* ===========================
-   6. SLEEK CHATBOT UI (Fixed Square Look)
+   6. SLEEK CHATBOT UI (Update positioning for Drag Logic)
    =========================== */
 #chat-widget { position: fixed !important; bottom: 25px !important; right: 25px !important; z-index: 2147483647 !important; }
 
@@ -206,7 +206,9 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 }
 
 .chat-box {
-    position: fixed !important; bottom: 100px !important; right: 25px !important;
+    position: fixed !important;
+    bottom: 100px; /* REMOVED !important for JS drag logic */
+    right: 25px;   /* REMOVED !important for JS drag logic */
     width: 350px !important; height: 500px !important; background: var(--card-bg) !important;
     border: 1px solid var(--border-color) !important;
     border-radius: 20px !important; /* Updated: Rounded UI to fix square look */
@@ -284,22 +286,25 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 .chat-box.minimized { height: 60px !important; overflow: hidden; }
 
 /* ===========================
-   7. ELIA AUTO-POPUP STYLING
+   7. ELIA AUTO-POPUP STYLING (FIXED: POSITIONED ON LEFT)
    =========================== */
 #elia-popup {
     position: absolute;
-    bottom: 85px; /* Slightly higher for sleek look */
-    right: 0;
-    width: 220px;
+    bottom: 7px; /* Centered with the 60px chat toggle button */
+    right: 75px; /* Positioned to the left of the button */
+    width: auto;
+    white-space: nowrap; /* Keeps proactive message on one line */
     background-color: var(--primary-color);
     color: white;
-    padding: 14px;
+    padding: 14px 20px;
     border-radius: 15px;
     font-size: 0.9rem;
     box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     z-index: 2147483647;
-    transition: opacity 0.5s ease, transform 0.3s ease;
+    transition: opacity 0.5s ease, transform 0.5s ease;
     text-align: center;
+    transform: translateX(20px); /* Animation start state */
+    opacity: 0;
 }
 
 #elia-popup.hidden {
@@ -308,14 +313,9 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     pointer-events: none;
 }
 
-.popup-arrow {
-    position: absolute;
-    bottom: -8px;
-    right: 20px;
-    width: 0; height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 8px solid var(--primary-color);
+#elia-popup:not(.hidden) {
+    opacity: 1;
+    transform: translateX(0); /* Animation end state */
 }
 
 /* ========================================================
@@ -527,9 +527,7 @@ body.dark-mode .form-control {
     background: rgba(0, 0, 0, 0.07);
     color: #666;
     padding: 3px 10px;
-    border-radius: 12px;
-    margin-top: 10px;
-    font-style: italic;
+    border-radius: 12px; margin-top: 10px; font-style: italic;
     width: fit-content;
     border: 1px solid rgba(0,0,0,0.1);
 }
@@ -540,7 +538,7 @@ body.dark-mode .form-control {
     border-color: rgba(255,255,255,0.1);
 }
 /* ========================================================
-   16. BUTTON HOVER & TOOLTIP ENHANCEMENTS
+   16. BUTTON HOVER & TOOLTIP ENHANCEMENTS (FIXED: ICON BOXES)
    ======================================================== */
 
 /* Send/Stop Button Hover Effect */
@@ -566,15 +564,23 @@ body.dark-mode .form-control {
     color: #dc2626;
 }
 
-/* Shared Chat Controls Hover (Minimize, Clear, Close) */
+/* Updated Chat Controls Logic: Removes the clunky box and borders */
 .chat-controls button {
-    transition: background-color 0.2s ease, transform 0.2s ease;
-    padding: 5px;
+    background: transparent !important; /* FIX: Removes the grey/white square */
+    border: none !important;            /* FIX: Removes the border around the icon */
+    color: rgba(255, 255, 255, 0.8) !important;
+    padding: 6px;
     border-radius: 4px;
+    cursor: pointer !important;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    outline: none !important;
+    box-shadow: none !important;      /* FIX: Removes shadow that creates a 'box' look */
 }
 
 .chat-controls button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
     transform: translateY(-2px);
 }
 
@@ -583,11 +589,6 @@ body.dark-mode .form-control {
     transform: scale(1.05);
     background-color: #1d4ed8 !important;
 }
-
-/* Native Tooltip Styling Note:
-   Browsers handle the 'title' attribute display automatically.
-   These hover styles ensure the user feels the button is interactive
-   before the tooltip even appears. */
 
 /* ========================================================
    17. STYLISH ELIA TYPOGRAPHY & HEADER REFINEMENT
@@ -613,6 +614,7 @@ body.dark-mode .form-control {
     align-items: center;
     gap: 8px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 120px; /* FIXED: Prevent header shift */
 }
 
 /* Status Indicator Dot */
@@ -633,21 +635,6 @@ body.dark-mode .form-control {
     100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
-.chat-controls button {
-    background: none !important;
-    border: none !important;
-    color: rgba(255, 255, 255, 0.8) !important;
-    cursor: pointer;
-    margin-left: 12px;
-    font-size: 14px;
-    transition: all 0.2s ease;
-}
-
-.chat-controls button:hover {
-    color: #ffffff !important;
-    transform: scale(1.1);
-}
-
 /* Markdown Formatting Fixes for Header Context */
 .dark-mode .chat-header {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -660,7 +647,7 @@ body.dark-mode .form-control {
 }
 
 /* ========================================================
-   18. HEADER TYPING STATUS
+   18. HEADER TYPING STATUS (REFINED)
    ======================================================== */
 
 /* Hidden by default, appears when .is-typing is added via JS */
@@ -674,6 +661,7 @@ body.dark-mode .form-control {
     text-transform: lowercase;
     font-style: italic;
     color: rgba(255, 255, 255, 0.8);
+    pointer-events: none; /* FIXED: No interference with clicks */
 }
 
 .chat-header span.is-typing::after {
@@ -685,37 +673,162 @@ body.dark-mode .form-control {
     display: none;
 }
 /* ========================================================
-   19. CODE BLOCK COPY BUTTON STYLES
+   19. CODE BLOCK COPY BUTTON STYLES (FIXED)
    ======================================================== */
 .message pre {
-    position: relative; /* Required for positioning the button */
-    padding-top: 35px; /* Space for the button */
+    position: relative;
+    padding: 45px 15px 15px 15px; /* FIXED: No overlap with button */
+    overflow-x: auto; /* FIXED: Mobile scrollability */
+    background-color: #1e1e1e !important;
+    color: #d4d4d4 !important;
+    border-radius: 8px;
+    margin: 10px 0;
 }
 
 .copy-code-btn {
     position: absolute;
     top: 8px;
     right: 8px;
-    padding: 5px 10px;
-    font-size: 0.75rem;
-    background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 0.7rem;
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
+    z-index: 10;
+    backdrop-filter: blur(4px); /* Modern frosted glass effect */
 }
 
 .copy-code-btn:hover {
     background: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
+    transform: translateY(-1px);
 }
 
 .copy-code-btn.copied {
-    background: #10b981; /* Success Green */
-    color: white;
+    background: #10b981 !important;
+    color: white !important;
+    border-color: #10b981 !important;
+}
+
+/* Fix for standard inline code blocks */
+.message code:not(pre code) {
+    background-color: rgba(0,0,0,0.1);
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+
+.dark-mode .message code:not(pre code) {
+    background-color: rgba(255,255,255,0.1);
+}
+/* ========================================================
+   20. PRISM SYNTAX HIGHLIGHTING TWEAKS
+   ======================================================== */
+.message pre[class*="language-"] {
+    margin: 15px 0 !important;
+    padding: 45px 15px 15px 15px !important; /* Keep space for Copy Button */
+    border-radius: 8px !important;
+    font-size: 0.9rem !important;
+    background: #1e1e1e !important; /* Keep code block dark in both modes */
+}
+
+/* Ensure Copy Button is visible on top of Prism colors */
+.copy-code-btn {
+    z-index: 20 !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.copy-code-btn:hover {
+    background: var(--primary-color) !important;
+}
+
+/* ========================================================
+   21. CUSTOM CONFIRMATION MODAL
+   ======================================================== */
+.chat-modal {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100; backdrop-filter: blur(2px);
+    transition: opacity 0.3s ease;
+}
+
+.chat-modal-content {
+    background: var(--card-bg);
+    padding: 20px; border-radius: 12px;
+    text-align: center; width: 80%;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.chat-modal-content p {
+    margin-bottom: 15px; font-weight: 600; color: var(--text-color);
+}
+
+.chat-modal-buttons {
+    display: flex; gap: 10px; justify-content: center;
+}
+
+.btn-confirm, .btn-cancel {
+    padding: 8px 16px; border-radius: 6px; border: none;
+    cursor: pointer; font-weight: 600; font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.btn-confirm { background: #ef4444; color: white; }
+.btn-confirm:hover { background: #dc2626; transform: scale(1.05); }
+
+.btn-cancel { background: var(--border-color); color: var(--text-color); }
+.btn-cancel:hover { background: #ccc; }
+
+.chat-modal.hidden { display: none; }
+
+/* ========================================================
+   22. PROACTIVE HELP BUBBLE (ARROW FIXED: POINTS TO CHAT ICON)
+   ======================================================== */
+.popup-arrow-left {
+    position: absolute;
+    right: -8px; /* Correctly offset from the proactive bubble */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0; height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid var(--primary-color); /* Correctly points toward the button on the right */
+}
+
+/* ========================================================
+   23. CHATBOT EXPANDED STATE (NEW)
+   ======================================================== */
+.chat-box.expanded {
+    width: 650px !important; /* Spacious width for long messages and code */
+    height: 80vh !important; /* Takes up more vertical space */
+    bottom: 90px !important; /* Slightly higher placement */
+    transition: width 0.4s ease, height 0.4s ease, bottom 0.4s ease !important;
+}
+
+@media (max-width: 768px) {
+    .chat-box.expanded {
+        width: 96vw !important;
+        height: 85vh !important;
+        right: 2vw !important;
+        bottom: 80px !important;
+    }
+}
+
+/* Ensure controls remain legible on expand */
+#chat-expand-btn i {
+    transition: transform 0.3s ease;
+}
+
+/* Fix for proactive bubble when expanded */
+.chat-box:not(.hidden).expanded ~ #elia-popup {
+    display: none !important; /* Hide popup if box is expanded to prevent clutter */
 }

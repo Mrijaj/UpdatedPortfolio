@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
 </head>
 <body>
 
@@ -21,23 +26,18 @@
             <li>
                 <a href="{{ url_for('home') }}" class="{{ 'active' if request.endpoint == 'home' }}">Home</a>
             </li>
-
             <li>
                 <a href="{{ url_for('about') }}" class="{{ 'active' if request.endpoint == 'about' }}">About</a>
             </li>
-
             <li>
                 <a href="{{ url_for('resume') }}" class="{{ 'active' if request.endpoint == 'resume' }}">Resume</a>
             </li>
-
             <li>
                 <a href="{{ url_for('blog') }}" class="{{ 'active' if request.endpoint == 'blog' }}">Blog</a>
             </li>
-
             <li>
                 <a href="{{ url_for('contact') }}" class="btn-nav {{ 'active-btn' if request.endpoint == 'contact' }}">Contact</a>
             </li>
-
             <li>
                 <i id="theme-icon" class="fas fa-moon" title="Toggle Dark Mode"></i>
             </li>
@@ -71,8 +71,8 @@
 
     <div id="chat-widget">
         <div id="elia-popup" class="hidden">
-            Hi! I'm Elia, Ijaj's AI. Chat with me!
-            <div class="popup-arrow"></div>
+            Having issues? Chat with Elia AI assistant.
+            <div class="popup-arrow-left"></div>
         </div>
 
         <button id="chat-toggle-btn" title="Chat with Elia">
@@ -86,8 +86,8 @@
                     <button id="chat-clear-btn" title="Clear Chat">
                         <i class="fas fa-trash"></i>
                     </button>
-                    <button id="chat-minimize-btn" title="Minimize">
-                        <i class="fas fa-minus"></i>
+                    <button id="chat-expand-btn" title="Expand Chat">
+                        <i class="fas fa-expand"></i>
                     </button>
                     <button id="chat-close-btn" title="Close">
                         <i class="fas fa-times"></i>
@@ -96,6 +96,16 @@
             </div>
 
             <div id="chat-messages" class="chat-messages"></div>
+
+            <div id="chat-confirm-modal" class="chat-modal hidden">
+                <div class="chat-modal-content">
+                    <p>Clear all messages?</p>
+                    <div class="chat-modal-buttons">
+                        <button id="confirm-clear-yes" class="btn-confirm">Clear</button>
+                        <button id="confirm-clear-no" class="btn-cancel">Cancel</button>
+                    </div>
+                </div>
+            </div>
 
             <div class="chat-input-area">
                 <input type="text" id="user-input" placeholder="Type a message..." autocomplete="off">

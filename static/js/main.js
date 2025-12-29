@@ -35,31 +35,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // ===========================
     const chatToggleBtn = document.getElementById('chat-toggle-btn');
     const chatBox = document.getElementById('chat-box');
+    const chatHeader = document.querySelector('.chat-header'); // Entire header is now handle
     const chatCloseBtn = document.getElementById('chat-close-btn');
-    const minimizeBtn = document.getElementById('chat-minimize-btn');
     const clearBtn = document.getElementById('chat-clear-btn');
+    const expandBtn = document.getElementById('chat-expand-btn');
     const sendBtn = document.getElementById('send-btn');
     const userInput = document.getElementById('user-input');
     const chatMessages = document.getElementById('chat-messages');
     const eliaPopup = document.getElementById('elia-popup');
 
+    // --- Modal Elements ---
+    const confirmModal = document.getElementById('chat-confirm-modal');
+    const confirmYes = document.getElementById('confirm-clear-yes');
+    const confirmNo = document.getElementById('confirm-clear-no');
+
     // Track active requests/typing for the "Stop" functionality
     let eliaAbortController = null;
 
-    // --- ELIA AUTO-POPUP LOGIC ---
+    // --- ELIA AUTO-POPUP LOGIC (REFINED) ---
     if (window.location.pathname === "/" || window.location.pathname.includes("home")) {
+        // Wait 3 seconds to show the bubble
         setTimeout(() => {
             if (eliaPopup && chatBox.classList.contains('hidden')) {
                 eliaPopup.classList.remove('hidden');
 
+                // TIME LIMIT: Disappear after 7 seconds
                 setTimeout(() => {
                     if (eliaPopup) {
                         eliaPopup.style.opacity = '0';
+                        eliaPopup.style.transform = 'translateX(20px)'; // Slide back towards the button
                         setTimeout(() => eliaPopup.remove(), 500);
                     }
-                }, 5000);
+                }, 7000);
             }
-        }, 2000);
+        }, 3000);
     }
 
     // --- HELPER: GET TIME GREETING ---
@@ -77,10 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedState = localStorage.getItem('chatState');
     if (savedState === 'open') {
         chatBox.classList.remove('hidden');
-        chatBox.classList.remove('minimized');
-    } else if (savedState === 'minimized') {
-        chatBox.classList.remove('hidden');
-        chatBox.classList.add('minimized');
     } else {
         chatBox.classList.add('hidden');
     }
@@ -110,14 +115,32 @@ document.addEventListener('DOMContentLoaded', () => {
         chatToggleBtn.addEventListener('click', () => {
             if (eliaPopup) eliaPopup.remove();
             chatBox.classList.toggle('hidden');
+
+            // Toggle Logic: The main button acts as minimize/maximize
             if (chatBox.classList.contains('hidden')) {
                 saveChatState('hidden');
             } else {
-                chatBox.classList.remove('minimized');
                 saveChatState('open');
                 if (window.innerWidth > 768 && userInput) {
                     setTimeout(() => userInput.focus(), 100);
                 }
+            }
+        });
+    }
+
+    // --- EXPAND FUNCTIONALITY (Fixed Icons) ---
+    if (expandBtn) {
+        expandBtn.addEventListener('click', () => {
+            chatBox.classList.toggle('expanded');
+            const icon = expandBtn.querySelector('i');
+            if (chatBox.classList.contains('expanded')) {
+                icon.classList.remove('fa-expand');
+                icon.classList.add('fa-compress');
+                expandBtn.title = "Compress Chat";
+            } else {
+                icon.classList.remove('fa-compress');
+                icon.classList.add('fa-expand');
+                expandBtn.title = "Expand Chat";
             }
         });
     }
@@ -129,19 +152,83 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (minimizeBtn) {
-        minimizeBtn.addEventListener('click', () => {
-            chatBox.classList.toggle('minimized');
-            saveChatState(chatBox.classList.contains('minimized') ? 'minimized' : 'open');
+    // --- MODAL CLEAR LOGIC ---
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            if (confirmModal) confirmModal.classList.remove('hidden');
         });
     }
 
-    if (clearBtn) {
-        clearBtn.addEventListener('click', () => {
+    if (confirmNo) {
+        confirmNo.addEventListener('click', () => {
+            if (confirmModal) confirmModal.classList.add('hidden');
+        });
+    }
+
+    if (confirmYes) {
+        confirmYes.addEventListener('click', () => {
             localStorage.removeItem('chatHistory');
             chatMessages.innerHTML = '';
             resetChat();
+            if (confirmModal) confirmModal.classList.add('hidden');
         });
+    }
+
+    // --- DRAG LOGIC (Full Header Handle with Phone Support) ---
+    let isDragging = false;
+    let xOffset = 0;
+    let yOffset = 0;
+    let initialX;
+    let initialY;
+
+    if (chatHeader) {
+        // Desktop Support
+        chatHeader.addEventListener('mousedown', dragStart);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', dragEnd);
+
+        // Mobile Support
+        chatHeader.addEventListener('touchstart', dragStart, { passive: false });
+        document.addEventListener('touchmove', drag, { passive: false });
+        document.addEventListener('touchend', dragEnd);
+    }
+
+    function dragStart(e) {
+        // Prevents dragging if a button inside the header is clicked
+        if (e.target.closest('button')) return;
+
+        if (e.type === "touchstart") {
+            initialX = e.touches[0].clientX - xOffset;
+            initialY = e.touches[0].clientY - yOffset;
+        } else {
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+        }
+
+        isDragging = true;
+    }
+
+    function drag(e) {
+        if (isDragging) {
+            e.preventDefault(); // Prevents background scroll on mobile
+
+            let currentX, currentY;
+            if (e.type === "touchmove") {
+                currentX = e.touches[0].clientX - initialX;
+                currentY = e.touches[0].clientY - initialY;
+            } else {
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+            }
+
+            xOffset = currentX;
+            yOffset = currentY;
+            chatBox.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+        }
+    }
+
+    function dragEnd() {
+        isDragging = false;
     }
 
     // --- D. TYPING INDICATOR LOGIC ---
@@ -170,7 +257,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const sendIcon = sendBtn.querySelector('i');
         const headerSpan = document.querySelector('.chat-header span');
 
-        // STOP functionality
         if (eliaAbortController) {
             eliaAbortController.abort();
             eliaAbortController = null;
@@ -201,7 +287,6 @@ document.addEventListener('DOMContentLoaded', () => {
             sendIcon.classList.add('fa-stop');
             sendBtn.title = "Stop Response";
 
-            // Trigger Typing status in header
             if (headerSpan) headerSpan.classList.add('is-typing');
         }
 
@@ -237,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- F. TYPEWRITER EFFECT HELPER (FIXED FOR GREETING) ---
+    // --- F. TYPEWRITER EFFECT HELPER ---
     function typeWriter(text, element, speed = 25) {
         let i = 0;
         element.textContent = "";
@@ -258,6 +343,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (typeof marked !== 'undefined') {
                     element.innerHTML = marked.parse(text);
                 }
+
+                addCopyButtons();
+
+                if (typeof Prism !== 'undefined') {
+                    Prism.highlightAllUnder(element);
+                }
+
                 finishAiResponse();
             }
         }
@@ -278,7 +370,6 @@ document.addEventListener('DOMContentLoaded', () => {
             sendBtn.title = "Send Message";
         }
 
-        // Remove Typing status from header
         if (headerSpan) headerSpan.classList.remove('is-typing');
 
         userInput.focus();
@@ -313,9 +404,63 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 messageBubble.textContent = text;
             }
+
+            addCopyButtons();
+
+            if (typeof Prism !== 'undefined') {
+                Prism.highlightAllUnder(messageBubble);
+            }
         }
 
         chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // --- G. COPY CODE FUNCTIONALITY (With Robust Fallback) ---
+    function addCopyButtons() {
+        const codeBlocks = chatMessages.querySelectorAll('pre');
+
+        codeBlocks.forEach((codeBlock) => {
+            if (codeBlock.querySelector('.copy-code-btn')) return;
+
+            const button = document.createElement('button');
+            button.className = 'copy-code-btn';
+            button.innerHTML = '<i class="far fa-copy"></i> Copy';
+            button.title = "Copy to clipboard";
+
+            button.addEventListener('click', () => {
+                const codeElement = codeBlock.querySelector('code');
+                const textToCopy = codeElement ? codeElement.innerText : codeBlock.innerText;
+
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(textToCopy)
+                        .then(() => showCopySuccess(button))
+                        .catch(err => console.error('Clipboard API failed:', err));
+                } else {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = textToCopy;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showCopySuccess(button);
+                    } catch (err) {
+                        console.error('Fallback copy failed:', err);
+                    }
+                    document.body.removeChild(textArea);
+                }
+            });
+
+            codeBlock.appendChild(button);
+        });
+    }
+
+    function showCopySuccess(btn) {
+        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.innerHTML = '<i class="far fa-copy"></i> Copy';
+            btn.classList.remove('copied');
+        }, 2000);
     }
 
     if (sendBtn) sendBtn.addEventListener('click', sendMessage);
