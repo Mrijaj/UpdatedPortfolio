@@ -24,7 +24,8 @@
 
                     {% set badge_bg = '#e0f2fe' %}
                     {% set badge_color = '#0284c7' %}
-                    {% if post.category == 'Python' %}
+                    {# CORRECTED: Changed 'Python' to 'Career' to match backend data #}
+                    {% if post.category == 'Career' %}
                         {% set badge_bg = '#dcfce7' %}
                         {% set badge_color = '#16a34a' %}
                     {% endif %}
@@ -86,8 +87,9 @@
                 <h3 style="margin-bottom: 15px; font-size: 1.2rem;">Categories</h3>
                 <ul style="list-style: none; padding: 0;">
                     <li style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
-                        <a href="{{ url_for('blog', category='Python') }}" style="text-decoration: none; color: var(--text-color); display: flex; justify-content: space-between;">
-                            <span><i class="fas fa-angle-right" style="color: var(--primary-color);"></i> Python</span>
+                        {# CORRECTED: Changed 'Python' to 'Career' to allow correct filtering #}
+                        <a href="{{ url_for('blog', category='Career') }}" style="text-decoration: none; color: var(--text-color); display: flex; justify-content: space-between;">
+                            <span><i class="fas fa-angle-right" style="color: var(--primary-color);"></i> Career</span>
                             <span style="background: #eee; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; color: #333;">1</span>
                         </a>
                     </li>

@@ -12,20 +12,22 @@ from groq import Groq
 # ==========================================
 # 1. THE "MONKEY PATCH" (BYPASS HPE PROXY)
 # ==========================================
-original_client_init = httpx.Client.__init__
+# Only run this if we are in a local dev environment to avoid issues in production
+if os.getenv("FLASK_ENV") == "development" or not os.getenv("RENDER"):
+    original_client_init = httpx.Client.__init__
 
 
-def patched_client_init(self, *args, **kwargs):
-    kwargs['verify'] = False
-    original_client_init(self, *args, **kwargs)
+    def patched_client_init(self, *args, **kwargs):
+        kwargs['verify'] = False
+        original_client_init(self, *args, **kwargs)
 
 
-httpx.Client.__init__ = patched_client_init
+    httpx.Client.__init__ = patched_client_init
 
-try:
-    ssl._create_default_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
+    try:
+        ssl._create_default_https_context = ssl._create_unverified_context
+    except AttributeError:
+        pass
 
 os.environ["SSL_CERT_FILE"] = certifi.where()
 load_dotenv()
@@ -41,8 +43,11 @@ MY_PHONE = os.getenv("MY_PHONE", "6202736628")
 
 client = Groq(api_key=GROQ_KEY)
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SUBSCRIBERS_FILE = os.path.join(BASE_DIR, "subscribers.txt")
+# FIXED: Use instance_path for production-friendly file writing
+if not os.path.exists(app.instance_path):
+    os.makedirs(app.instance_path)
+
+SUBSCRIBERS_FILE = os.path.join(app.instance_path, "subscribers.txt")
 
 # ==========================================
 # 3. ELIA'S REFINED KNOWLEDGE BASE (UNCHANGED)
@@ -106,7 +111,6 @@ def about():
 
 @app.route("/resume")
 def resume():
-    # External links for your background
     links = {
         "college": "https://ghrcem.raisoni.net/",
         "school": "https://www.dayanandpublicschool.edu.in/",
@@ -117,7 +121,6 @@ def resume():
 
 @app.route("/blog/")
 def blog():
-    # FIXED: Added logic to handle category filtering from the sidebar
     category = request.args.get('category')
     all_posts = [
         {
@@ -154,7 +157,6 @@ def article_2():
     return render_template("article_2.html", title="Flask and AI Integration")
 
 
-# Fallback route to match the 'url_for(post, ...)' logic in blog.html
 @app.route("/blog/post/<int:post_id>")
 def post(post_id):
     return render_template("post_detail.html", post_id=post_id)
@@ -166,15 +168,22 @@ def contact():
 
 
 # ==========================================
-# 6. SUBSCRIBE & ADMIN
+# 6. SUBSCRIBE & ADMIN (FIXED FOR PRODUCTION)
 # ==========================================
 @app.route("/subscribe", methods=["POST"])
 def subscribe():
     email = request.form.get("email")
     if email:
-        with open(SUBSCRIBERS_FILE, "a", encoding="utf-8") as f:
-            f.write(email.strip() + "\n")
-    return redirect(url_for('thank_you'))
+        try:
+            # Using 'a+' to handle file creation and reading safely
+            with open(SUBSCRIBERS_FILE, "a+", encoding="utf-8") as f:
+                f.write(email.strip() + "\n")
+            return redirect(url_for('thank_you'))
+        except Exception as e:
+            print(f"❌ Subscription Error: {e}")
+            return redirect(url_for('home'))
+
+    return redirect(url_for('home'))
 
 
 @app.route("/thank-you")
@@ -198,8 +207,12 @@ def view_subscribers():
         return redirect(url_for("login"))
     emails = []
     if os.path.exists(SUBSCRIBERS_FILE):
-        with open(SUBSCRIBERS_FILE, "r", encoding="utf-8") as f:
-            emails = [e.strip() for e in f if e.strip()]
+        try:
+            with open(SUBSCRIBERS_FILE, "r", encoding="utf-8") as f:
+                emails = [e.strip() for e in f if e.strip()]
+        except Exception as e:
+            print(f"❌ Admin Read Error: {e}")
+
     return render_template("admin.html", emails=emails, title="Admin Panel")
 
 
