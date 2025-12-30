@@ -43,11 +43,13 @@ MY_PHONE = os.getenv("MY_PHONE", "6202736628")
 
 client = Groq(api_key=GROQ_KEY)
 
-# FIXED: Use instance_path for production-friendly file writing
-if not os.path.exists(app.instance_path):
-    os.makedirs(app.instance_path)
-
-SUBSCRIBERS_FILE = os.path.join(app.instance_path, "subscribers.txt")
+# FIXED: Conditional pathing to prevent crash on Vercel read-only file system
+if os.getenv("VERCEL"):
+    SUBSCRIBERS_FILE = "/tmp/subscribers.txt"
+else:
+    if not os.path.exists(app.instance_path):
+        os.makedirs(app.instance_path)
+    SUBSCRIBERS_FILE = os.path.join(app.instance_path, "subscribers.txt")
 
 # ==========================================
 # 3. ELIA'S REFINED KNOWLEDGE BASE (UNCHANGED)
