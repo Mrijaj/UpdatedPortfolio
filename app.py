@@ -95,16 +95,6 @@ class User(db.Model):
     otp_expiry = db.Column(db.DateTime, nullable=True)
 
 
-with app.app_context():
-    # Structural Reset Logic to enforce model property alignment across SQLite engines
-    try:
-        db.create_all()
-    except Exception as db_err:
-        print(f"⚠️ Initial schema verification threw warnings. Dropping tables to rebuild structures: {db_err}")
-        db.drop_all()
-        db.create_all()
-        print("🏗️ Tables synchronized cleanly with fresh column indexes.")
-
 # ==========================================
 # 3. GROQ / ELIA CONFIGURATION
 # ==========================================
