@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section style="min-height: 85vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
+
+    <div class="card" style="width: 100%; max-width: 400px; padding: 40px; box-shadow: var(--shadow); text-align: center;">
+
+        <h2 style="color: var(--primary-color); margin-bottom: 10px; font-size: 24px;">Welcome to Ijaj portfolio website</h2>
+        <p style="font-size: 14px; opacity: 0.7; margin-bottom: 25px;">Sign up to continue</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="status-msg {% if category == 'error' %}error{% else %}success{% endif %}" style="margin-bottom: 20px;">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <div id="g_id_onload"
+             data-client_id="{{ google_client_id }}"
+             data-context="signup"
+             data-ux_mode="popup"
+             data-callback="handleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline" data-text="signup_with" data-size="large" data-logo_alignment="left" style="display: flex; justify-content: center; margin-bottom: 20px;"></div>
+
+        <div style="margin: 20px 0; display: flex; align-items: center; gap: 10px;">
+            <hr style="flex: 1; opacity: 0.2;">
+            <span style="font-size: 12px; opacity: 0.5; font-weight: bold;">OR</span>
+            <hr style="flex: 1; opacity: 0.2;">
+        </div>
+
+        <form method="POST" action="/register" style="display: flex; flex-direction: column; gap: 15px;">
+            <input type="text" name="username" placeholder="Username" required class="form-control">
+
+            <input type="email" name="email" placeholder="Email Address" required class="form-control">
+
+            <input type="password" name="password" placeholder="Password" required class="form-control">
+
+            <input type="password" name="confirm_password" placeholder="Confirm Password" required class="form-control">
+
+            <button type="submit" class="btn-submit" style="margin-top: 10px;">
+                Create Account
+            </button>
+        </form>
+
+        <div style="margin-top: 25px; font-size: 14px;">
+            <p>Already registered? <a href="/login" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Log in here</a></p>
+        </div>
+    </div>
+</section>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+    function handleCredentialResponse(response) {
+        // Send the Google JWT to your /google-login endpoint
+        fetch('/google-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: response.credential })
+        }).then(res => res.json())
+          .then(data => {
+              if (data.status === 'profile_incomplete') {
+                  // New user branch: Route to metadata profile form
+                  window.location.href = '/complete-profile';
+              } else if (data.status === 'success') {
+                  // Existing user branch: Route directly to dashboard
+                  window.location.href = '/admin/view-subscribers';
+              } else {
+                  // Error fallback
+                  alert("Registration/Login failed: " + (data.message || "Unknown error"));
+              }
+          })
+          .catch(err => console.error("Error during Google auth:", err));
+    }
+</script>
+
+{% endblock %}

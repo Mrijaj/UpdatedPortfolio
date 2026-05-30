@@ -5,6 +5,16 @@
         <li><a href="{{ url_for('about') }}">About Me</a></li>
         <li><a href="{{ url_for('resume') }}">Resume</a></li>
         <li><a href="{{ url_for('blog') }}">Blog</a></li>
+
+        <!-- Updated Authentication Logic with Transparent Styles -->
+        {% if session.get('logged_in') %}
+            <li><a href="{{ url_for('view_subscribers') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('logout') }}" class="btn-transparent">Logout</a></li>
+        {% else %}
+            <li><a href="{{ url_for('login') }}" class="btn-transparent">Login</a></li>
+            <li><a href="{{ url_for('register') }}" class="btn-transparent">Signup</a></li>
+        {% endif %}
+
         <li><a href="{{ url_for('contact') }}" class="btn-nav">Contact Me</a></li>
     </ul>
 </nav>

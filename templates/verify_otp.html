@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container" style="max-width: 450px; margin: 80px auto; padding: 40px; background: var(--card-bg, #1e1e2e); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); color: var(--text-color, #f3f4f6);">
+
+    <div class="auth-header" style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 2rem; color: #3b82f6; margin-bottom: 10px;">Security Verification</h2>
+        <p style="color: #9ca3af; font-size: 0.95rem;">
+            We've sent a 6-digit one-time passcode to <br>
+            <strong style="color: var(--text-color, #ffffff); font-family: 'Courier New', monospace;">{{ email }}</strong>
+        </p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" style="padding: 12px; margin-bottom: 20px; border-radius: 6px; font-size: 0.9rem; text-align: center; background: {{ '#d1fae5' if category == 'success' else '#fee2e2' }}; color: {{ '#065f46' if category == 'success' else '#991b1b' }};">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('verify_google_otp') if session.get('temp_oauth_id') else url_for('verify_otp') }}" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
+
+        <input type="hidden" name="email" value="{{ email }}">
+
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 8px;">
+            <label for="otp" style="font-weight: 500; font-size: 0.9rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em;">Enter Verification Code</label>
+            <input
+                type="text"
+                id="otp"
+                name="otp"
+                placeholder="000000"
+                maxlength="6"
+                pattern="\d{6}"
+                required
+                autocomplete="off"
+                style="width: 100%; padding: 14px; font-size: 1.5rem; letter-spacing: 0.3em; text-align: center; border: 2px solid #4b5563; border-radius: 8px; background: rgba(0,0,0,0.2); color: #ffffff; font-family: 'Courier New', monospace; transition: border-color 0.2s;"
+                onfocus="this.style.borderColor='#3b82f6'; this.style.outline='none';"
+                onblur="this.style.borderColor='#4b5563';"
+            >
+        </div>
+
+        <button type="submit" class="btn-nav" style="width: 100%; padding: 14px; font-size: 1rem; font-weight: 600; text-align: center; border: none; border-radius: 8px; cursor: pointer; background: #3b82f6; color: white; transition: background 0.2s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+            Verify & Authorize
+        </button>
+    </form>
+
+    <div class="auth-footer" style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #374151;">
+
+        <div id="countdown-container">
+            <p style="font-size: 0.85rem; color: #9ca3af; margin: 0;">
+                Didn't receive the email? <br>
+                You can request a new code in <strong id="timer" style="color: #ffffff; font-family: 'Courier New', monospace;">10</strong> seconds.
+            </p>
+        </div>
+
+        <div id="resend-container" style="display: none;">
+            <p style="font-size: 0.85rem; color: #9ca3af; margin: 0 0 10px 0;">Didn't receive the email?</p>
+
+            {% if session.get('temp_oauth_id') %}
+                <a href="{{ url_for('complete_profile') }}" style="color: #3b82f6; text-decoration: none; font-weight: 600; font-size: 0.95rem;">Resend Verification Code</a>
+            {% else %}
+                <form action="{{ url_for('request_otp') }}" method="POST" style="margin: 0; display: inline;">
+                    <input type="hidden" name="email" value="{{ email }}">
+                    <button type="submit" style="background: none; border: none; color: #3b82f6; font-size: 0.95rem; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0;">
+                        Resend Verification Code
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let timeLeft = 10;
+        const timerElement = document.getElementById("timer");
+        const countdownContainer = document.getElementById("countdown-container");
+        const resendContainer = document.getElementById("resend-container");
+
+        const countdownInterval = setInterval(function() {
+            timeLeft--;
+            timerElement.textContent = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                countdownContainer.style.display = "none";
+                resendContainer.style.display = "block";
+            }
+        }, 1000);
+    });
+</script>
+
+{% endblock %}

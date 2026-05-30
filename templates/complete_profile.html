@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container" style="max-width: 480px; margin: 80px auto; padding: 40px; background: var(--card-bg, #1e1e2e); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); color: var(--text-color, #f3f4f6);">
+
+    <div class="auth-header" style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 1.8rem; color: #3b82f6; margin-bottom: 10px;">Complete Your Profile</h2>
+        <p style="color: #9ca3af; font-size: 0.95rem;">Just a couple more system parameters to verify your portfolio access authority.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" style="padding: 12px; margin-bottom: 20px; border-radius: 6px; font-size: 0.9rem; text-align: center; background: {{ '#d1fae5' if category == 'success' else '#fee2e2' }}; color: {{ '#065f46' if category == 'success' else '#991b1b' }};">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('submit_profile_details') }}" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
+
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 0.85rem; color: #9ca3af; text-transform: uppercase;">Full Name</label>
+            <input type="text" name="username" required placeholder="Enter preferred screen name"
+                   style="padding: 12px; border: 1px solid #4b5563; border-radius: 6px; background: rgba(0,0,0,0.1); color: white;">
+        </div>
+
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 0.85rem; color: #9ca3af; text-transform: uppercase;">Contact Number</label>
+
+            <input type="tel" name="phone" required placeholder="10-digit Indian Mobile"
+                   pattern="[6-9][0-9]{9}"
+                   maxlength="10"
+                   title="Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9."
+                   style="padding: 12px; border: 1px solid #4b5563; border-radius: 6px; background: rgba(0,0,0,0.1); color: white;">
+        </div>
+
+        <button type="submit" class="btn-nav" style="width: 100%; padding: 14px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+            Proceed to Email Verification
+        </button>
+    </form>
+</div>
+{% endblock %}

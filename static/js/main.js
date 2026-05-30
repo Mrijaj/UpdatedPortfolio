@@ -104,8 +104,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetChat() {
-        const timeGreeting = getTimeBasedGreeting();
-        const welcomeText = `${timeGreeting}! I am Elia, Ijaj's AI assistant. Ask me anything!`;
+        let welcomeText;
+
+        // Identity Handshake Logic: Personalize initial greeting if window token contains a user string
+        if (window.USER_IDENTITY && window.USER_IDENTITY.trim() !== "") {
+            welcomeText = `Access granted. Systems console online. Welcome back, Administrator ${window.USER_IDENTITY}! How can I assist you with your portfolio infrastructure today?`;
+        } else {
+            const timeGreeting = getTimeBasedGreeting();
+            welcomeText = `${timeGreeting}! I am Elia, Ijaj's AI assistant. Ask me anything!`;
+        }
+
         addMessageToUI(welcomeText, 'bot-message');
         saveMessageHistory(welcomeText, 'bot-message');
     }

@@ -77,7 +77,12 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 }
 
 .nav-links a:hover { color: var(--primary-color); }
-.nav-links a.active { color: var(--primary-color); font-weight: 700; }
+
+/* Blue Active Logic */
+.nav-links a.active {
+    color: var(--primary-color) !important;
+    font-weight: 700;
+}
 
 .btn-nav {
     background-color: var(--primary-color) !important;
@@ -88,6 +93,32 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     font-weight: 600;
     white-space: nowrap;
     opacity: 1 !important;
+}
+
+.btn-nav.active-btn {
+    box-shadow: 0 0 15px var(--primary-color);
+}
+
+/* Transparent Glassmorphism Buttons (Updated for Square-Soft look) */
+.btn-transparent {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+    backdrop-filter: blur(5px);
+    padding: 8px 20px; /* Wider padding for better balance */
+    border-radius: 8px !important; /* Soft square look per reference */
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.btn-transparent:hover, .btn-transparent.active {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    transform: translateY(-1px);
 }
 
 #theme-icon {
@@ -106,7 +137,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
         gap: 10px;
     }
 
-    /* FIXED: Changed to auto width and inline-block to prevent full-width click area */
     .logo {
         order: 1;
         width: auto;
@@ -131,16 +161,20 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     .nav-links::-webkit-scrollbar { display: none; }
     .nav-links { -ms-overflow-style: none; scrollbar-width: none; }
 
-    .nav-links a:not(.btn-nav) {
+    .nav-links a:not(.btn-nav):not(.btn-transparent) {
         padding: 8px 15px;
         background-color: rgba(0,0,0,0.03);
         border-radius: 20px;
         font-size: 14px;
     }
-    .nav-links a.active { background-color: var(--primary-color); color: white; }
 
-    .nav-links .btn-nav {
-        background-color: var(--primary-color) !important; color: white !important;
+    /* Mobile Active State */
+    .nav-links a.active {
+        background-color: var(--primary-color);
+        color: white !important;
+    }
+
+    .nav-links .btn-nav, .nav-links .btn-transparent {
         padding: 8px 15px; font-size: 14px; border-radius: 6px; margin-left: 5px;
     }
 
@@ -193,7 +227,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 .social-links { display: flex; gap: 20px; }
 
 /* ===========================
-   6. SLEEK CHATBOT UI (Update positioning for Drag Logic)
+   6. SLEEK CHATBOT UI
    =========================== */
 #chat-widget { position: fixed !important; bottom: 25px !important; right: 25px !important; z-index: 2147483647 !important; }
 
@@ -207,11 +241,11 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 
 .chat-box {
     position: fixed !important;
-    bottom: 100px; /* REMOVED !important for JS drag logic */
-    right: 25px;   /* REMOVED !important for JS drag logic */
+    bottom: 100px;
+    right: 25px;
     width: 350px !important; height: 500px !important; background: var(--card-bg) !important;
     border: 1px solid var(--border-color) !important;
-    border-radius: 20px !important; /* Updated: Rounded UI to fix square look */
+    border-radius: 20px !important;
     display: flex !important; flex-direction: column !important; overflow: hidden !important;
     z-index: 2147483647 !important; box-shadow: var(--shadow);
 }
@@ -219,7 +253,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 .chat-box.hidden { display: none !important; }
 
 .chat-header {
-    background: linear-gradient(135deg, var(--primary-color), #6366f1); /* Updated: Professional gradient */
+    background: linear-gradient(135deg, var(--primary-color), #6366f1);
     color: white; padding: 18px; display: flex; justify-content: space-between; align-items: center;
 }
 
@@ -240,7 +274,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 }
 
 .message {
-    padding: 12px 16px; border-radius: 15px; /* Updated: Rounded bubbles */
+    padding: 12px 16px; border-radius: 15px;
     max-width: 80%; word-wrap: break-word; font-size: 0.95rem; line-height: 1.4;
 }
 
@@ -272,7 +306,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 }
 #user-input {
     flex: 1; padding: 12px; border: 1px solid var(--border-color);
-    border-radius: 25px; /* Updated: Pill-shaped input for modern look */
+    border-radius: 25px;
     outline: none; background: var(--bg-color);
     color: var(--text-color); font-size: 0.9rem;
 }
@@ -286,14 +320,14 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 .chat-box.minimized { height: 60px !important; overflow: hidden; }
 
 /* ===========================
-   7. ELIA AUTO-POPUP STYLING (FIXED: POSITIONED ON LEFT)
+   7. ELIA AUTO-POPUP STYLING
    =========================== */
 #elia-popup {
     position: absolute;
-    bottom: 7px; /* Centered with the 60px chat toggle button */
-    right: 75px; /* Positioned to the left of the button */
+    bottom: 7px;
+    right: 75px;
     width: auto;
-    white-space: nowrap; /* Keeps proactive message on one line */
+    white-space: nowrap;
     background-color: var(--primary-color);
     color: white;
     padding: 14px 20px;
@@ -303,7 +337,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     z-index: 2147483647;
     transition: opacity 0.5s ease, transform 0.5s ease;
     text-align: center;
-    transform: translateX(20px); /* Animation start state */
+    transform: translateX(20px);
     opacity: 0;
 }
 
@@ -315,11 +349,11 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 
 #elia-popup:not(.hidden) {
     opacity: 1;
-    transform: translateX(0); /* Animation end state */
+    transform: translateX(0);
 }
 
 /* ========================================================
-   8. MOBILE BLOG REORDERING (Search Top, Subscribe Bottom)
+   8. MOBILE BLOG REORDERING
    ======================================================== */
 @media (max-width: 768px) {
     .blog-main-wrapper {
@@ -350,7 +384,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
         margin-bottom: 40px;
     }
 
-    /* MOBILE FOOTER SAFE ZONE FIX */
     .footer {
         padding-bottom: 110px !important;
     }
@@ -431,7 +464,7 @@ body.dark-mode .form-control {
 }
 
 #back-to-top:hover {
-    background-color: #1d4ed8; /* Slightly darker blue */
+    background-color: #1d4ed8;
     transform: scale(1.1);
 }
 
@@ -465,12 +498,12 @@ body.dark-mode .form-control {
    13. FORM FEEDBACK & ANIMATIONS
    ======================================================== */
 .form-success {
-    border-color: #10b981 !important; /* Green */
+    border-color: #10b981 !important;
     background-color: rgba(16, 185, 129, 0.05) !important;
 }
 
 .form-error {
-    border-color: #ef4444 !important; /* Red */
+    border-color: #ef4444 !important;
     background-color: rgba(239, 68, 68, 0.05) !important;
 }
 
@@ -538,36 +571,33 @@ body.dark-mode .form-control {
     border-color: rgba(255,255,255,0.1);
 }
 /* ========================================================
-   16. BUTTON HOVER & TOOLTIP ENHANCEMENTS (FIXED: ICON BOXES)
+   16. BUTTON HOVER & TOOLTIP ENHANCEMENTS
    ======================================================== */
 
-/* Send/Stop Button Hover Effect */
 #send-btn {
     transition: transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
 }
 
 #send-btn:hover:not(:disabled) {
     transform: scale(1.15);
-    color: #1d4ed8; /* Slightly deeper blue on hover */
+    color: #1d4ed8;
 }
 
 #send-btn:active:not(:disabled) {
     transform: scale(0.95);
 }
 
-/* Specific styling when the button is in 'STOP' mode */
 #send-btn .fa-stop {
-    color: #ef4444; /* Red color for the stop icon to signal danger/stop */
+    color: #ef4444;
 }
 
 #send-btn:hover .fa-stop {
     color: #dc2626;
 }
 
-/* Updated Chat Controls Logic: Removes the clunky box and borders */
 .chat-controls button {
-    background: transparent !important; /* FIX: Removes the grey/white square */
-    border: none !important;            /* FIX: Removes the border around the icon */
+    background: transparent !important;
+    border: none !important;
     color: rgba(255, 255, 255, 0.8) !important;
     padding: 6px;
     border-radius: 4px;
@@ -575,7 +605,7 @@ body.dark-mode .form-control {
     font-size: 14px;
     transition: all 0.2s ease;
     outline: none !important;
-    box-shadow: none !important;      /* FIX: Removes shadow that creates a 'box' look */
+    box-shadow: none !important;
 }
 
 .chat-controls button:hover {
@@ -584,20 +614,19 @@ body.dark-mode .form-control {
     transform: translateY(-2px);
 }
 
-/* Chat Toggle Button Hover */
 #chat-toggle-btn:hover {
     transform: scale(1.05);
     background-color: #1d4ed8 !important;
 }
 
 /* ========================================================
-   17. STYLISH ELIA TYPOGRAPHY & HEADER REFINEMENT
+   17. STYLISH ELIA TYPOGRAPHY
    ======================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
 
 .chat-header {
     background: linear-gradient(135deg, var(--primary-color), #6366f1);
-    color: #ffffff !important; /* Forces white text for legibility on gradient */
+    color: #ffffff !important;
     padding: 18px 20px;
     display: flex;
     justify-content: space-between;
@@ -614,15 +643,14 @@ body.dark-mode .form-control {
     align-items: center;
     gap: 8px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    min-width: 120px; /* FIXED: Prevent header shift */
+    min-width: 120px;
 }
 
-/* Status Indicator Dot */
 .chat-header span::before {
     content: '';
     width: 8px;
     height: 8px;
-    background-color: #10b981; /* Online Green */
+    background-color: #10b981;
     border-radius: 50%;
     display: inline-block;
     box-shadow: 0 0 8px #10b981;
@@ -635,22 +663,19 @@ body.dark-mode .form-control {
     100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
-/* Markdown Formatting Fixes for Header Context */
 .dark-mode .chat-header {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Ensure the chat avatar in messages looks premium */
 .chat-avatar {
     border: 2px solid var(--primary-color);
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 /* ========================================================
-   18. HEADER TYPING STATUS (REFINED)
+   18. HEADER TYPING STATUS
    ======================================================== */
 
-/* Hidden by default, appears when .is-typing is added via JS */
 .chat-header span::after {
     content: 'typing...';
     font-size: 0.75rem;
@@ -661,24 +686,23 @@ body.dark-mode .form-control {
     text-transform: lowercase;
     font-style: italic;
     color: rgba(255, 255, 255, 0.8);
-    pointer-events: none; /* FIXED: No interference with clicks */
+    pointer-events: none;
 }
 
 .chat-header span.is-typing::after {
     opacity: 1;
 }
 
-/* Hide the green online dot when typing to save space */
 .chat-header span.is-typing::before {
     display: none;
 }
 /* ========================================================
-   19. CODE BLOCK COPY BUTTON STYLES (FIXED)
+   19. CODE BLOCK COPY BUTTON STYLES
    ======================================================== */
 .message pre {
     position: relative;
-    padding: 45px 15px 15px 15px; /* FIXED: No overlap with button */
-    overflow-x: auto; /* FIXED: Mobile scrollability */
+    padding: 45px 15px 15px 15px;
+    overflow-x: auto;
     background-color: #1e1e1e !important;
     color: #d4d4d4 !important;
     border-radius: 8px;
@@ -701,7 +725,7 @@ body.dark-mode .form-control {
     align-items: center;
     gap: 6px;
     z-index: 10;
-    backdrop-filter: blur(4px); /* Modern frosted glass effect */
+    backdrop-filter: blur(4px);
 }
 
 .copy-code-btn:hover {
@@ -717,7 +741,6 @@ body.dark-mode .form-control {
     border-color: #10b981 !important;
 }
 
-/* Fix for standard inline code blocks */
 .message code:not(pre code) {
     background-color: rgba(0,0,0,0.1);
     padding: 2px 5px;
@@ -732,13 +755,12 @@ body.dark-mode .form-control {
    ======================================================== */
 .message pre[class*="language-"] {
     margin: 15px 0 !important;
-    padding: 45px 15px 15px 15px !important; /* Keep space for Copy Button */
+    padding: 45px 15px 15px 15px !important;
     border-radius: 8px !important;
     font-size: 0.9rem !important;
-    background: #1e1e1e !important; /* Keep code block dark in both modes */
+    background: #1e1e1e !important;
 }
 
-/* Ensure Copy Button is visible on top of Prism colors */
 .copy-code-btn {
     z-index: 20 !important;
     background: rgba(255, 255, 255, 0.1) !important;
@@ -791,26 +813,26 @@ body.dark-mode .form-control {
 .chat-modal.hidden { display: none; }
 
 /* ========================================================
-   22. PROACTIVE HELP BUBBLE (ARROW FIXED: POINTS TO CHAT ICON)
+   22. PROACTIVE HELP BUBBLE
    ======================================================== */
 .popup-arrow-left {
     position: absolute;
-    right: -8px; /* Correctly offset from the proactive bubble */
+    right: -8px;
     top: 50%;
     transform: translateY(-50%);
     width: 0; height: 0;
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
-    border-left: 8px solid var(--primary-color); /* Correctly points toward the button on the right */
+    border-left: 8px solid var(--primary-color);
 }
 
 /* ========================================================
-   23. CHATBOT EXPANDED STATE (NEW)
+   23. CHATBOT EXPANDED STATE
    ======================================================== */
 .chat-box.expanded {
-    width: 650px !important; /* Spacious width for long messages and code */
-    height: 80vh !important; /* Takes up more vertical space */
-    bottom: 90px !important; /* Slightly higher placement */
+    width: 650px !important;
+    height: 80vh !important;
+    bottom: 90px !important;
     transition: width 0.4s ease, height 0.4s ease, bottom 0.4s ease !important;
 }
 
@@ -823,12 +845,10 @@ body.dark-mode .form-control {
     }
 }
 
-/* Ensure controls remain legible on expand */
 #chat-expand-btn i {
     transition: transform 0.3s ease;
 }
 
-/* Fix for proactive bubble when expanded */
 .chat-box:not(.hidden).expanded ~ #elia-popup {
-    display: none !important; /* Hide popup if box is expanded to prevent clutter */
+    display: none !important;
 }

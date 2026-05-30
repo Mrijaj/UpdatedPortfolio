@@ -1,33 +1,93 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="container" style="max-width: 400px; padding: 60px 20px; text-align: center;">
 
-    <div class="card">
-        <h2 style="margin-bottom: 20px;">Admin Login</h2>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div style="background: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                    {{ messages[0] }}
-                </div>
-            {% endif %}
+<section style="min-height: 85vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
+
+    <div class="card" style="width: 100%; max-width: 400px; padding: 40px; box-shadow: var(--shadow); text-align: center;">
+
+        <h2 style="color: var(--primary-color); margin-bottom: 10px; font-size: 24px;">Welcome to Ijaj portfolio website</h2>
+        <p style="font-size: 14px; opacity: 0.7; margin-bottom: 25px;">Login to continue</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="status-msg {% if category == 'error' %}error{% else %}success{% endif %}" style="margin-bottom: 20px;">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
         {% endwith %}
 
-        <form action="{{ url_for('login') }}" method="POST">
-            <div style="margin-bottom: 15px; text-align: left;">
-                <label>Username</label>
-                <input type="text" name="username" class="form-control" required style="width: 100%; margin-top: 5px;">
-            </div>
+        <form method="POST" action="/login" style="display: flex; flex-direction: column; gap: 15px;">
+            <input type="text" name="username" placeholder="Username" required class="form-control">
+            <input type="password" name="password" placeholder="Password" required class="form-control">
 
-            <div style="margin-bottom: 20px; text-align: left;">
-                <label>Password</label>
-                <input type="password" name="password" class="form-control" required style="width: 100%; margin-top: 5px;">
-            </div>
-
-            <button type="submit" class="btn-submit" style="width: 100%;">Login</button>
+            <button type="submit" class="btn-submit" style="margin-top: 10px;">
+                Secure Login
+            </button>
         </form>
-    </div>
 
-</div>
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center;">
+            <div id="g_id_onload"
+                 data-client_id="{{ google_client_id }}"
+                 data-context="signin"
+                 data-ux_mode="popup"
+                 data-callback="handleGoogleCredentialResponse"
+                 data-auto_select="false">
+            </div>
+
+            <div class="g_id_signin"
+                 data-type="standard"
+                 data-shape="rectangular"
+                 data-theme="outline"
+                 data-text="signin_with"
+                 data-size="large"
+                 data-logo_alignment="left"
+                 style="width: 100%;">
+            </div>
+        </div>
+
+        <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+            <p style="font-size: 13px; margin-bottom: 15px; opacity: 0.8;">Lost your password?</p>
+            <form action="/request-otp" method="POST" style="display: flex; flex-direction: column; gap: 10px;">
+                <input type="email" name="email" placeholder="Enter email for OTP" required class="form-control">
+                <button type="submit" class="btn-transparent" style="width: 100%;">Get One-Time Passcode</button>
+            </form>
+        </div>
+
+        <div style="margin-top: 25px; font-size: 14px;">
+            <p>New here? <a href="/register" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Sign up here</a></p>
+        </div>
+    </div>
+</section>
+
+<script>
+function handleGoogleCredentialResponse(response) {
+    fetch('/google-login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: response.credential })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'profile_incomplete') {
+            // New user branch: Route to metadata profile form
+            window.location.href = "/complete-profile";
+        } else if (data.status === 'success') {
+            // Existing user branch: Route directly to dashboard
+            window.location.href = "{{ url_for('view_subscribers') }}";
+        } else {
+            alert("Security Handshake Refused: " + data.message);
+        }
+    })
+    .catch(err => {
+        console.error("OAuth Network Exception Error:", err);
+    });
+}
+</script>
+
 {% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="settings-container" style="max-width: 650px; margin: 60px auto; padding: 40px; background: var(--card-bg, #1e1e2e); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); color: var(--text-color, #f3f4f6);">
+
+    <div style="border-bottom: 2px solid #374151; padding-bottom: 20px; margin-bottom: 30px;">
+        <h2 style="font-size: 2rem; color: #3b82f6; margin: 0;">Account Settings</h2>
+        <p style="color: #9ca3af; font-size: 0.95rem; margin-top: 5px;">Manage your system authentication profiles and user parameters.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" style="padding: 14px; margin-bottom: 25px; border-radius: 6px; font-size: 0.9rem; text-align: center; background: {{ '#d1fae5' if category == 'success' else '#fee2e2' }}; color: {{ '#065f46' if category == 'success' else '#991b1b' }}; border: 1px solid {{ '#10b981' if category == 'success' else '#ef4444' }};">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div style="background: rgba(0,0,0,0.15); border: 1px solid #374151; border-radius: 8px; padding: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <div>
+            <span style="font-size: 0.8rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 4px;">Registered Email Address</span>
+            <strong style="font-family: monospace; font-size: 1.05rem; color: #ffffff;">{{ user.email if user.email else 'No email attached' }}</strong>
+        </div>
+        <div>
+            <span style="font-size: 0.8rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 4px; text-align: right;">Authorization Node</span>
+            {% if user.google_id %}
+                <span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; border: 1px solid #10b981; display: inline-block;">
+                    <i class="fab fa-google" style="margin-right: 4px;"></i> Google Federated Account
+                </span>
+            {% else %}
+                <span style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; border: 1px solid #8b5cf6; display: inline-block;">
+                    <i class="fas fa-lock" style="margin-right: 4px;"></i> Standard Core
+                </span>
+            {% endif %}
+        </div>
+    </div>
+
+    <form action="{{ url_for('settings') }}" method="POST" style="display: flex; flex-direction: column; gap: 25px;">
+
+        <input type="hidden" name="action" value="update_profile">
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label for="username" style="font-size: 0.85rem; color: #9ca3af; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Screen Name / Username</label>
+            <input
+                type="text"
+                id="username"
+                name="username"
+                value="{{ user.username }}"
+                required
+                style="padding: 12px; border: 1px solid #4b5563; border-radius: 6px; background: rgba(0,0,0,0.2); color: white; font-size: 1rem; transition: border-color 0.2s;"
+                onfocus="this.style.borderColor='#3b82f6'; this.style.outline='none';"
+                onblur="this.style.borderColor='#4b5563';"
+            >
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label for="phone" style="font-size: 0.85rem; color: #9ca3af; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Contact Parameter (Indian Mobile)</label>
+            <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value="{{ user.phone if user.phone else '' }}"
+                placeholder="Enter 10-digit mobile number"
+                pattern="[6-9][0-9]{9}"
+                maxlength="10"
+                title="Please enter a genuine 10-digit Indian mobile number starting with 6, 7, 8, or 9."
+                style="padding: 12px; border: 1px solid #4b5563; border-radius: 6px; background: rgba(0,0,0,0.2); color: white; font-size: 1rem; font-family: monospace; transition: border-color 0.2s;"
+                onfocus="this.style.borderColor='#3b82f6'; this.style.outline='none';"
+                onblur="this.style.borderColor='#4b5563';"
+            >
+        </div>
+
+        <div style="display: flex; gap: 15px; margin-top: 15px; flex-wrap: wrap;">
+            <button type="submit" class="btn-nav" style="flex: 2; padding: 14px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+                <i class="fas fa-save" style="margin-right: 6px;"></i> Commit Dynamic Changes
+            </button>
+
+            <a href="{{ url_for('view_subscribers') }}" style="flex: 1; padding: 14px; background: transparent; color: #9ca3af; border: 1px solid #4b5563; border-radius: 6px; font-weight: 600; text-align: center; text-decoration: none; font-size: 0.95rem; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.color='white'; this.style.borderColor='white';" onmouseout="this.style.color='#9ca3af'; this.style.borderColor='#4b5563';">
+                Return to Console
+            </a>
+        </div>
+
+    </form>
+</div>
+{% endblock %}

@@ -1,47 +1,233 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="container" style="max-width: 600px; padding: 60px 20px;">
+<section style="padding: 40px 5%; max-width: 1200px; margin: 0 auto; min-height: 85vh;">
 
-    <div class="card">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 20px;">
-            <h2 style="margin: 0;">
-                <i class="fas fa-users"></i> Subscriber List
-            </h2>
-            <span style="background: #e0f2fe; color: #0284c7; padding: 5px 10px; border-radius: 10px; font-weight: bold;">
-                Total: {{ emails|length }}
-            </span>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+        <div>
+            <h1 style="font-size: 28px; color: var(--primary-color);">System Operations Console</h1>
+            <p style="opacity: 0.7; font-size: 14px;">Secure Administrative Node &bull; <span style="font-family: monospace; color: #10b981; font-weight: bold;">SYS_ACTIVE</span></p>
         </div>
-
-        {% if emails %}
-            <ul style="list-style: none; padding: 0;">
-                {% for email in emails %}
-                <li style="
-                    background: #f8f9fa;
-                    padding: 12px;
-                    margin-bottom: 8px;
-                    border-radius: 6px;
-                    border-left: 4px solid var(--primary-color);
-                    font-family: monospace;
-                    font-size: 1.1rem;
-                    color: #333;">
-                    {{ email }}
-                </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <div style="text-align: center; padding: 20px; color: gray;">
-                <i class="far fa-folder-open" style="font-size: 2rem; margin-bottom: 10px;"></i>
-                <p>No subscribers found yet.</p>
-            </div>
-        {% endif %}
-
-        <div style="margin-top: 30px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 20px;">
-            <a href="{{ url_for('logout') }}" class="btn-submit" style="background-color: #ef4444; color: white; text-decoration: none;">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
+        <div style="text-align: right;">
+            <p style="font-weight: 600; font-size: 16px;">Operator: {{ session.get('user', 'Admin') }}</p>
+            <a href="{{ url_for('logout') }}" style="color: #ef4444; font-size: 13px; text-decoration: none; font-weight: 600;"><i class="fas fa-power-off"></i> Terminate Session</a>
         </div>
     </div>
 
-</div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" style="padding: 12px; margin-bottom: 25px; border-radius: 6px; font-size: 0.9rem; background: {{ '#d1fae5' if category == 'success' else '#fee2e2' }}; color: {{ '#065f46' if category == 'success' else '#991b1b' }}; border: 1px solid {{ '#10b981' if category == 'success' else '#ef4444' }};">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div style="display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; overflow-x: auto; white-space: nowrap;">
+        <button onclick="switchTab('telemetry-tab')" class="tab-btn active-tab" id="btn-telemetry-tab" style="padding: 10px 20px; background: transparent; border: none; color: var(--text-color); font-weight: 600; cursor: pointer; border-radius: 6px; transition: all 0.2s;">
+            <i class="fas fa-satellite-dish"></i> Environment Telemetry
+        </button>
+        <button onclick="switchTab('scheduler-tab')" class="tab-btn" id="btn-scheduler-tab" style="padding: 10px 20px; background: transparent; border: none; color: var(--text-color); font-weight: 600; cursor: pointer; border-radius: 6px; transition: all 0.2s; opacity: 0.6;">
+            <i class="fas fa-calendar-alt"></i> Schedule Tech Sync
+        </button>
+    </div>
+
+    <div id="telemetry-tab" class="console-tab-content">
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px; align-items: start;">
+
+            <div>
+                <div class="card" style="padding: 25px; margin-bottom: 30px; border-left: 4px solid var(--primary-color);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="font-size: 18px; display: flex; align-items: center; gap: 10px;">
+                            <i class="fab fa-github" style="font-size: 22px;"></i> Live Build Sync: <span style="font-family: monospace;">Blog-Website</span>
+                        </h3>
+                        <span id="repo-status-badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; font-family: monospace;">
+                            CONNECTING...
+                        </span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                        <div style="background: var(--bg-color); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid var(--border-color);">
+                            <p style="font-size: 11px; opacity: 0.6; text-transform: uppercase; font-weight: bold;">Language</p>
+                            <h4 id="repo-lang" style="font-size: 15px; margin-top: 5px;">-</h4>
+                        </div>
+                        <div style="background: var(--bg-color); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid var(--border-color);">
+                            <p style="font-size: 11px; opacity: 0.6; text-transform: uppercase; font-weight: bold;">Stars</p>
+                            <h4 id="repo-stars" style="font-size: 15px; margin-top: 5px;">-</h4>
+                        </div>
+                        <div style="background: var(--bg-color); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid var(--border-color);">
+                            <p style="font-size: 11px; opacity: 0.6; text-transform: uppercase; font-weight: bold;">Open Issues</p>
+                            <h4 id="repo-issues" style="font-size: 15px; margin-top: 5px;">-</h4>
+                        </div>
+                        <div style="background: var(--bg-color); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid var(--border-color);">
+                            <p style="font-size: 11px; opacity: 0.6; text-transform: uppercase; font-weight: bold;">Latest Push</p>
+                            <h4 id="repo-updated" style="font-size: 13px; margin-top: 5px; font-family: monospace;">-</h4>
+                        </div>
+                    </div>
+
+                    <a id="repo-link" href="#" target="_blank" class="btn-transparent" style="font-size: 13px; text-align: center; width: 100%; display: block;">
+                        <i class="fas fa-external-link-alt"></i> Inspect Source Repository Base
+                    </a>
+                </div>
+
+                <div class="card" style="padding: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 20px;">
+                        <h3 style="margin: 0; font-size: 18px; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-database"></i> Database Store: User Registry
+                        </h3>
+                        <span style="background: rgba(37, 99, 235, 0.1); color: var(--primary-color); padding: 5px 12px; border-radius: 10px; font-weight: bold; font-size: 14px; font-family: monospace;">
+                            Pool: {{ users|length }}
+                        </span>
+                    </div>
+
+                    <div style="overflow-x: auto; background: rgba(0,0,0,0.1); border-radius: 8px; border: 1px solid var(--border-color);">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                            <thead>
+                                <tr style="background: rgba(55, 65, 81, 0.3); border-bottom: 2px solid var(--primary-color);">
+                                    <th style="padding: 15px; color: var(--text-color); font-size: 13px; text-transform: uppercase; opacity: 0.8;">System ID</th>
+                                    <th style="padding: 15px; color: var(--text-color); font-size: 13px; text-transform: uppercase; opacity: 0.8;">Identity Matrix</th>
+                                    <th style="padding: 15px; color: var(--text-color); font-size: 13px; text-transform: uppercase; opacity: 0.8;">Contact Node</th>
+                                    <th style="padding: 15px; color: var(--text-color); font-size: 13px; text-transform: uppercase; opacity: 0.8;">Auth Origin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if users %}
+                                    {% for user in users %}
+                                    <tr style="border-bottom: 1px solid var(--border-color); font-size: 14px; transition: background 0.2s;" onmouseover="this.style.background='rgba(59,130,246,0.05)'" onmouseout="this.style.background='transparent'">
+                                        <td style="padding: 15px; font-family: monospace; opacity: 0.6;">#00{{ user.id }}</td>
+                                        <td style="padding: 15px;">
+                                            <strong style="color: var(--primary-color); display: block;">{{ user.username }}</strong>
+                                            <span style="font-size: 12px; opacity: 0.7;">{{ user.email }}</span>
+                                        </td>
+                                        <td style="padding: 15px; font-family: monospace; opacity: 0.8;">
+                                            {{ user.phone if user.phone else 'UNVERIFIED' }}
+                                        </td>
+                                        <td style="padding: 15px;">
+                                            {% if user.google_id %}
+                                                <span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; border: 1px solid #10b981; white-space: nowrap;">
+                                                    <i class="fab fa-google"></i> Google OAuth
+                                                </span>
+                                            {% else %}
+                                                <span style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; border: 1px solid #8b5cf6; white-space: nowrap;">
+                                                    <i class="fas fa-lock"></i> Standard
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="4" style="padding: 40px; text-align: center; opacity: 0.5;">
+                                        <i class="fas fa-server" style="font-size: 2.5rem; display: block; margin-bottom: 15px;"></i>
+                                        No authenticated users registered in the system cluster yet.
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="padding: 25px; background: #151515 !important; color: #10b981 !important; font-family: monospace; font-size: 12px; border-color: #333; box-shadow: var(--shadow);">
+                <h4 style="color: white; margin-bottom: 15px; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-terminal"></i> Infrastructure Activity
+                </h4>
+                <div style="display: flex; flex-direction: column; gap: 10px; opacity: 0.9;">
+                    <p>[INFO] Initialization handshake... OK</p>
+                    <p style="color: #3b82f6;">[AUTH] Administrative clearance granted.</p>
+                    <p>[DB] Ingested live SQLite database matrix pool.</p>
+                    <p>[AI] Elia deep network core: SYNCHRONIZED</p>
+                    <p style="color: #eab308;">[WARN] Node serving environment: ACTIVE</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="scheduler-tab" class="console-tab-content" style="display: none;">
+        <div class="card" style="padding: 40px; max-width: 600px; margin: 0 auto; border-top: 4px solid var(--primary-color);">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h3 style="font-size: 22px; margin-bottom: 10px;">Schedule a Technical Evaluation</h3>
+                <p style="opacity: 0.7; font-size: 14px;">Commit a calendar block directly to my system cluster.</p>
+            </div>
+
+            <form style="display: flex; flex-direction: column; gap: 20px;">
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; opacity: 0.8;">Evaluator Identity (Name)</label>
+                    <input type="text" placeholder="e.g. Technical Recruiter" required class="form-control">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; opacity: 0.8;">Organization Domain (Company)</label>
+                    <input type="text" placeholder="e.g. Enterprise Engineering" required class="form-control">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; opacity: 0.8;">Proposed Execution Window (Date & Time)</label>
+                    <input type="datetime-local" required class="form-control">
+                </div>
+                <button type="button" onclick="alert('Relational data model pipeline ready! Up next, we connect this save route.')" class="btn-submit" style="margin-top: 10px;">
+                    Commit Slot to Infrastructure
+                </button>
+            </form>
+        </div>
+    </div>
+
+</section>
+
+<script>
+    function switchTab(tabId) {
+        // Hide all tab contents
+        document.querySelectorAll('.console-tab-content').forEach(el => el.style.display = 'none');
+        // Unhighlight all tabs
+        document.querySelectorAll('.tab-btn').forEach(el => {
+            el.style.opacity = '0.6';
+            el.style.background = 'transparent';
+            el.style.color = 'var(--text-color)';
+        });
+
+        // Show targets
+        document.getElementById(tabId).style.display = 'block';
+
+        // Style selected element
+        const activeTab = document.getElementById('btn-' + tabId);
+        activeTab.style.opacity = '1';
+        activeTab.style.backgroundColor = 'var(--primary-color)';
+        activeTab.style.color = 'white';
+    }
+
+    // Initialize pipeline data fetch automatically
+    document.addEventListener("DOMContentLoaded", function() {
+        // Run initial configuration styling for first active tab
+        const firstTab = document.getElementById('btn-telemetry-tab');
+        firstTab.style.backgroundColor = 'var(--primary-color)';
+        firstTab.style.color = 'white';
+        firstTab.style.opacity = '1';
+
+        // Connect pipeline stream to our Flask backend route
+        fetch('/api/github-blog-metrics')
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 'ONLINE') {
+                    document.getElementById('repo-status-badge').innerText = 'PIPELINE_OK';
+                    document.getElementById('repo-lang').innerText = data.language;
+                    document.getElementById('repo-stars').innerText = data.stars + ' ★';
+                    document.getElementById('repo-issues').innerText = data.open_issues;
+                    document.getElementById('repo-updated').innerText = data.last_updated;
+                    document.getElementById('repo-link').href = data.repo_url;
+                } else {
+                    setPipelineError();
+                }
+            })
+            .catch(err => {
+                console.error("Pipeline breakdown:", err);
+                setPipelineError();
+            });
+    });
+
+    function setPipelineError() {
+        const badge = document.getElementById('repo-status-badge');
+        badge.innerText = 'PIPELINE_FAULT';
+        badge.style.background = 'rgba(239, 68, 68, 0.1)';
+        badge.style.color = '#ef4444';
+    }
+</script>
 {% endblock %}
